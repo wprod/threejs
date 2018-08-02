@@ -3,7 +3,7 @@ let scene, camera, renderer, ring1, ring2, ring3, sphere;
 let ADD = 0.02;
 
 let createRingOne = function() {
-    let geometry = new THREE.TorusGeometry(1, 1, 1, 200, 6);
+    let geometry = new THREE.TorusGeometry(.7, .05, 2, 100, 6.3);
     let material = new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff});
 
     ring1 = new THREE.Mesh(geometry, material);
@@ -11,24 +11,15 @@ let createRingOne = function() {
 };
 
 let createRingTwo = function() {
-    let geometry = new THREE.TorusGeometry(1, .5, 5, 30);
+    let geometry = new THREE.TorusGeometry(.9, .05, 2, 100, 6.3);
     let material = new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff});
 
     ring2 = new THREE.Mesh(geometry, material);
     scene.add(ring2);
 };
 
-
-let createRingThree = function() {
-    let geometry = new THREE.TorusGeometry(1, 0, 5, 30);
-    let material = new THREE.MeshBasicMaterial({color: Math.random() * 0xffffff});
-
-    ring3 = new THREE.Mesh(geometry, material);
-    scene.add(ring3);
-};
-
 let createSphere = function() {
-    let geometry = new THREE.SphereGeometry(.5, 10, 20);
+    let geometry = new THREE.SphereGeometry(.5, 60, 200);
     let material = new THREE.MeshBasicMaterial({color: '#C45599', wireframe: true});
 
     sphere = new THREE.Mesh(geometry, material);
@@ -52,8 +43,7 @@ let init = function () {
 
     createSphere();
     createRingOne();
-    // createRingTwo();
-    // createRingThree();
+    createRingTwo();
 
     let axes = new THREE.AxesHelper(5);
     scene.add(axes);

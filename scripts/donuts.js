@@ -19,7 +19,6 @@ let createDonut = function() {
     donut.position.z = randomInRange(-15, 15);
     scene.add(donut);
     donuts.push(donut);
-
 };
 
 // Set up the environment

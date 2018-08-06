@@ -1,5 +1,6 @@
 let Colors = {
     red: 0xf25346,
+    black: 0x333359,
     white: 0xd8d0d1,
     pink: 0xf5986e,
     blue: 0x68c3c0,
@@ -15,9 +16,9 @@ window.addEventListener("load", init, false);
 function init() {
     createScene();
     createLights();
-    createPlane();
+    createBee();
     createParticle();
-    createSea();
+    // createSea();
     document.addEventListener("mousemove", handleMouseMove, false);
     loop();
 }
@@ -25,10 +26,11 @@ function init() {
 let scene,
     fieldOfView,
     aspectRatio,
-    nearPlane,
-    farPlane,
+    nearBee,
+    farBee,
     renderer,
     container;
+
 let HEIGHT, WIDTH;
 
 function createScene() {
@@ -38,14 +40,14 @@ function createScene() {
     scene = new THREE.Scene();
     aspectRatio = WIDTH / HEIGHT;
     fieldOfView = 60;
-    nearPlane = 1;
-    farPlane = 10000;
+    nearBee = 1;
+    farBee = 10000;
 
     camera = new THREE.PerspectiveCamera(
         fieldOfView,
         aspectRatio,
-        nearPlane,
-        farPlane
+        nearBee,
+        farBee
     );
 
     scene.fog = new THREE.Fog(0xf58585, 100, 780);
@@ -110,37 +112,33 @@ function createLights() {
     scene.add(shadowLight);
 }
 
-let AirPlane =  function() {
+let Bee = function () {
     this.mesh = new THREE.Object3D();
 
-    let geomCockpit = new THREE.BoxGeometry(130, 60, 230, 1, 1, 1);
-    let matCockpit = new THREE.MeshPhongMaterial({
-        color: Colors.red,
+    let geometryHead = new THREE.SphereGeometry(35, 32, 32);
+    let materialHead = new THREE.MeshPhongMaterial({
+        color: Colors.black,
         shading: THREE.FlatShading
     });
 
-    geomCockpit.vertices[4].z += 40;
-    geomCockpit.vertices[4].y -= 40;
-    geomCockpit.vertices[1].z += 40;
-    geomCockpit.vertices[1].y -= 40;
+    this.head = new THREE.Mesh(geometryHead, materialHead);
+    this.head.castShadow = true;
+    this.head.receiveShadow = true;
+    this.mesh.add(this.head);
 
-    this.cockpit = new THREE.Mesh(geomCockpit, matCockpit);
-    this.cockpit.castShadow = true;
-    this.cockpit.receiveShadow = true;
-    this.mesh.add(this.cockpit);
-
-    let geomSideWing = new THREE.BoxGeometry(100, 3, 130, 1, 1, 1);
-    let matSideWing = new THREE.MeshPhongMaterial({
+    let geometrySideWing = new THREE.BoxGeometry(100, 3, 130, 1, 1, 1);
+    let materialSideWing = new THREE.MeshPhongMaterial({
         color: Colors.blue,
         shading: THREE.FlatShading
     });
 
-    geomSideWing.vertices[5].z += 70;
-    geomSideWing.vertices[7].z += 70;
-    geomSideWing.vertices[4].z -= 70;
-    geomSideWing.vertices[6].z -= 70;
+    geometrySideWing.vertices[5].z += 70;
+    geometrySideWing.vertices[7].z += 70;
+    geometrySideWing.vertices[4].z -= 70;
+    geometrySideWing.vertices[6].z -= 70;
 
-    let sideWing = new THREE.Mesh(geomSideWing, matSideWing);
+    let sideWing = new THREE.Mesh(geometrySideWing, materialSideWing);
+
     sideWing.castShadow = true;
     sideWing.receiveShadow = true;
     sideWing.position.z += 40;
@@ -265,14 +263,14 @@ Sea.prototype.moveWaves = function () {
     sea.mesh.rotation.z += 0.005;
 };
 
-let airplane;
+let bee;
 
-function createPlane() {
-    airplane = new AirPlane();
-    airplane.mesh.scale.set(0.25, 0.25, 0.25);
-    airplane.mesh.position.y = 0;
-    airplane.mesh.position.z = 0;
-    scene.add(airplane.mesh);
+function createBee() {
+    bee = new Bee();
+    bee.mesh.scale.set(0.25, 0.25, 0.25);
+    bee.mesh.position.y = 0;
+    bee.mesh.position.z = 0;
+    scene.add(bee.mesh);
 
 }
 
@@ -282,24 +280,24 @@ function createSea() {
     scene.add(sea.mesh);
 }
 
-function updatePlane() {
+function updateBee() {
     let targetX = normalize(mousePos.x, -1, 1, -100, 100);
     let targetZ = normalize(mousePos.y, -1, 1, 100, -200);
-    airplane.mesh.position.x += (targetX - airplane.mesh.position.x) * 0.1;
-    airplane.mesh.position.z += (targetZ - airplane.mesh.position.z) * 0.1;
+    bee.mesh.position.x += (targetX - bee.mesh.position.x) * 0.1;
+    bee.mesh.position.z += (targetZ - bee.mesh.position.z) * 0.1;
     if (targetZ > 0) {
-        sea.mesh.rotation.x += 0.002 + targetZ / 100000;
+        // sea.mesh.rotation.x += 0.002 + targetZ / 100000;
         for (let i = 0; i < p.length; i++) {
             p[i].mesh.rotation.x += 0.001 + targetZ / 300000;
         }
     } else {
-        sea.mesh.rotation.x += 0.005 + -targetZ / 10000;
+        // sea.mesh.rotation.x += 0.005 + -targetZ / 10000;
         for (let i = 0; i < p.length; i++) {
             p[i].mesh.rotation.x += 0.001 + -targetZ / 30000;
         }
     }
 
-    airplane.mesh.rotation.z = 0;
+    bee.mesh.rotation.z = 0;
 }
 
 function normalize(v, vmin, vmax, tmin, tmax) {
@@ -348,9 +346,10 @@ function createParticle() {
 
 function loop() {
     let a = 0.01;
-    airplane.mesh.position.y += Math.sin(a);
+    bee.mesh.position.y += Math.sin(a);
+    bee.mesh.rotation.z += Math.sin(a);
     renderer.render(scene, camera);
-    updatePlane();
+    updateBee();
     requestAnimationFrame(loop);
 }
 

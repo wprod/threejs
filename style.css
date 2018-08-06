@@ -10,7 +10,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background: linear-gradient(#7882ff, #ff8d8d);
+    background: linear-gradient(to bottom, #94c5f8 1%,#a6e6ff 70%,#b1b5ea 100%);
 }
 
 .txt {

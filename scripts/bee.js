@@ -4,7 +4,8 @@ let Colors = {
     white: 0xd8d0d1,
     pink: 0xf5986e,
     blue: 0x68c3c0,
-    grey: 0x5f5f5f
+    grey: 0x5f5f5f,
+    yellow: 0xe7af11,
 };
 
 let mousePos = {
@@ -112,12 +113,149 @@ function createLights() {
     scene.add(shadowLight);
 }
 
-let Bee = function () {
-    var loader = new THREE.ObjectLoader();
-    this. mloader.load('./scripts/models/bee.json', (geometry) => {
-        this.mesh = new THREE.Mesh(geometry);
-        scene.add(new THREE.Mesh(geometry));
+let Bee =  function() {
+    this.mesh = new THREE.Object3D();
+
+    //HEAD
+    let geomHead = new THREE.SphereGeometry(55, 32, 32);
+    let matHead = new THREE.MeshPhongMaterial({
+        color: Colors.black,
+        shading: THREE.FlatShading
     });
+
+    this.head = new THREE.Mesh(geomHead, matHead);
+    this.head.castShadow = true;
+    this.head.receiveShadow = true;
+    this.head.position.z -= 130;
+    this.head.position.y -= 10;
+    this.mesh.add(this.head);
+
+    //BODY1
+    let geomBody1 = new THREE.SphereGeometry(65, 32, 32);
+    let matBody1 = new THREE.MeshPhongMaterial({
+        color: Colors.yellow,
+        shading: THREE.FlatShading
+    });
+
+    this.body1 = new THREE.Mesh(geomBody1, matBody1);
+    this.body1.castShadow = true;
+    this.body1.receiveShadow = true;
+    this.body1.position.z = -100;
+    this.mesh.add(this.body1);
+
+    //BODY2
+    let geomBody2 = new THREE.SphereGeometry(70, 32, 32);
+    let matBody2 = new THREE.MeshPhongMaterial({
+        color: Colors.black,
+        shading: THREE.FlatShading
+    });
+
+    this.body2 = new THREE.Mesh(geomBody2, matBody2);
+    this.body2.castShadow = true;
+    this.body2.receiveShadow = true;
+    this.body2.position.z -= 70;
+    this.mesh.add(this.body2);
+
+    //BODYWING
+    let geomBodyWing = new THREE.SphereGeometry(30, 32, 32);
+    let matBodyWing = new THREE.MeshPhongMaterial({
+        color: Colors.black,
+        shading: THREE.FlatShading
+    });
+
+    this.bodyWing = new THREE.Mesh(geomBodyWing, matBodyWing);
+    this.bodyWing.castShadow = true;
+    this.bodyWing.receiveShadow = true;
+    this.bodyWing.position.z -= 70;
+    this.bodyWing.position.y += 50;
+    this.mesh.add(this.bodyWing);
+
+    //BODY3
+    let geomBody3 = new THREE.SphereGeometry(65, 32, 32);
+    let matBody3 = new THREE.MeshPhongMaterial({
+        color: Colors.yellow,
+        shading: THREE.FlatShading
+    });
+
+    this.body3 = new THREE.Mesh(geomBody3, matBody3);
+    this.body3.castShadow = true;
+    this.body3.receiveShadow = true;
+    this.body3.position.z -= 40;
+    this.mesh.add(this.body3);
+
+
+    //TAIL
+    let geomTail = new THREE.SphereGeometry(45, 32, 32);
+    let matTail = new THREE.MeshPhongMaterial({
+        color: Colors.black,
+        shading: THREE.FlatShading
+    });
+
+    this.tail = new THREE.Mesh(geomTail, matTail);
+    this.tail.castShadow = true;
+    this.tail.receiveShadow = true;
+    this.tail.position.z = 0;
+    this.head.position.y -= 10;
+    this.mesh.add(this.tail);
+
+    //WING1
+    let geomSideWing1 = new THREE.BoxGeometry(100, 2, 130, 1, 1, 1);
+    let matSideWing1 = new THREE.MeshPhongMaterial({
+        color: Colors.blue,
+        shading: THREE.FlatShading
+    });
+
+    geomSideWing1.vertices[4].z -= 40;
+    geomSideWing1.vertices[5].z -= 40;
+    geomSideWing1.vertices[6].z -= 40;
+    geomSideWing1.vertices[7].z -= 40;
+
+    this.sideWing1 = new THREE.Mesh(geomSideWing1, matSideWing1);
+    this.sideWing1.castShadow = true;
+    this.sideWing1.receiveShadow = true;
+    this.sideWing1.position.z -= 35;
+    this.sideWing1.position.y += 70;
+    this.sideWing1.position.x += 110;
+    this.sideWing1.rotation.y = .8;
+    this.mesh.add(this.sideWing1);
+
+    //WING2
+    let geomSideWing2 = new THREE.BoxGeometry(100, 2, 130, 1, 1, 1);
+    let matSideWing2 = new THREE.MeshPhongMaterial({
+        color: Colors.blue,
+        shading: THREE.FlatShading
+    });
+
+    geomSideWing2.vertices[4].z -= 40;
+    geomSideWing2.vertices[5].z -= 40;
+    geomSideWing2.vertices[6].z -= 40;
+    geomSideWing2.vertices[7].z -= 40;
+
+    this.sideWing2 = new THREE.Mesh(geomSideWing2, matSideWing2);
+    this.sideWing2.castShadow = true;
+    this.sideWing2.receiveShadow = true;
+    this.sideWing2.position.z -= 50;
+    this.sideWing2.position.y += 70;
+    this.sideWing2.position.x -= 80;
+    this.sideWing2.rotation.y = 1.2;
+    this.mesh.add(this.sideWing2);
+
+    //STING
+    let geomDard = new THREE.CylinderGeometry(20, 0, 50, 10);
+    let matDard = new THREE.MeshPhongMaterial({
+        color: Colors.white,
+        shading: THREE.FlatShading
+    });
+
+    this.dard = new THREE.Mesh(geomDard, matDard);
+    this.dard.castShadow = true;
+    this.dard.receiveShadow = true;
+    this.dard.position.z += 50;
+    this.dard.position.y -= 10;
+    this.dard.rotation.x = Math.PI*1.6;
+    this.mesh.add(this.dard);
+
+
 };
 
 Sea = function () {
@@ -169,15 +307,12 @@ Sea.prototype.moveWaves = function () {
     sea.mesh.rotation.z += 0.005;
 };
 
-let bee;
-
 function createBee() {
     bee = new Bee();
     bee.mesh.scale.set(0.25, 0.25, 0.25);
     bee.mesh.position.y = 0;
     bee.mesh.position.z = 0;
     scene.add(bee.mesh);
-
 }
 
 function createSea() {
@@ -252,8 +387,11 @@ function createParticle() {
 
 function loop() {
     let a = 0.01;
-    bee.mesh.position.y += Math.sin(a);
-    bee.mesh.rotation.z += Math.sin(a);
+    // bee.mesh.position.y += Math.sin(a);
+    // bee.mesh.rotation.z += Math.sin(a);
+
+    //bee.mesh.rotation.y += a;
+    //bee.mesh.rotation.x += a;
     renderer.render(scene, camera);
     updateBee();
     requestAnimationFrame(loop);

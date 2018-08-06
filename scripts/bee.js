@@ -126,6 +126,17 @@ let Bee = function () {
     this.head.receiveShadow = true;
     this.mesh.add(this.head);
 
+    let geometryBody = new THREE.SphereGeometry(35, 32, 32);
+    let materialBody = new THREE.MeshPhongMaterial({
+        color: Colors.black,
+        shading: THREE.FlatShading
+    });
+
+    this.body = new THREE.Mesh(geometryBody, materialBody);
+    this.body.castShadow = true;
+    this.body.receiveShadow = true;
+    this.mesh.add(this.body);
+
     let geometrySideWing = new THREE.BoxGeometry(100, 3, 130, 1, 1, 1);
     let materialSideWing = new THREE.MeshPhongMaterial({
         color: Colors.blue,

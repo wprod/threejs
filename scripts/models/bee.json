@@ -1,0 +1,157 @@
+{
+	"metadata": {
+		"version": 4.5,
+		"type": "Object",
+		"generator": "Object3D.toJSON"
+	},
+	"geometries": [
+		{
+			"uuid": "658EB01F-5C86-429F-B4D2-94A01D9478ED",
+			"type": "CircleBufferGeometry",
+			"radius": 1,
+			"segments": 8,
+			"thetaStart": 0,
+			"thetaLength": 6.283185
+		},
+		{
+			"uuid": "6664CA02-597E-4D11-9E89-53A802353A1B",
+			"type": "SphereBufferGeometry",
+			"radius": 1,
+			"widthSegments": 8,
+			"heightSegments": 6,
+			"phiStart": 0,
+			"phiLength": 6.283185,
+			"thetaStart": 0,
+			"thetaLength": 3.141593
+		},
+		{
+			"uuid": "B73B163D-1E7C-4E6C-B1B3-6073F5CCA48C",
+			"type": "SphereBufferGeometry",
+			"radius": 1,
+			"widthSegments": 8,
+			"heightSegments": 6,
+			"phiStart": 0,
+			"phiLength": 6.283185,
+			"thetaStart": 0,
+			"thetaLength": 3.141593
+		},
+		{
+			"uuid": "72D11894-5744-4F8F-9218-742422E683AF",
+			"type": "SphereBufferGeometry",
+			"radius": 1,
+			"widthSegments": 8,
+			"heightSegments": 6,
+			"phiStart": 0,
+			"phiLength": 6.283185,
+			"thetaStart": 0,
+			"thetaLength": 3.141593
+		}],
+	"materials": [
+		{
+			"uuid": "85674350-50F5-4C70-BC80-90DEBAAB5818",
+			"type": "MeshBasicMaterial",
+			"color": 11579568,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		},
+		{
+			"uuid": "519C895E-FC93-4F47-A562-F237479B09D3",
+			"type": "MeshBasicMaterial",
+			"color": 10987431,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		},
+		{
+			"uuid": "7B50DB34-5BF1-4F4D-A38D-6633B526DC88",
+			"type": "MeshStandardMaterial",
+			"color": 16777215,
+			"roughness": 0.5,
+			"metalness": 0.5,
+			"emissive": 0,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		},
+		{
+			"uuid": "FE49E51A-7E8A-4D4D-AE25-B6B9C7AE7E0D",
+			"type": "MeshStandardMaterial",
+			"color": 16777215,
+			"roughness": 0.5,
+			"metalness": 0.5,
+			"emissive": 0,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		},
+		{
+			"uuid": "AB5EEE80-374B-4080-A103-A6726DA653D9",
+			"type": "MeshBasicMaterial",
+			"color": 16756998,
+			"depthFunc": 3,
+			"depthTest": true,
+			"depthWrite": true
+		}],
+	"object": {
+		"uuid": "B12A67E5-C945-4399-9C4C-5121093F58FA",
+		"type": "Scene",
+		"name": "Scene",
+		"receiveShadow": true,
+		"layers": 1,
+		"matrix": [1.08,0,0,0,0,1.08,0,0,0,0,1.08,0,0,0,0,1],
+		"children": [
+			{
+				"uuid": "0ACF6827-1B73-4AB8-9EAE-DCA8D6E86358",
+				"type": "Mesh",
+				"name": "Circle",
+				"layers": 1,
+				"matrix": [-1.803599,-0.402648,0.020726,0,0.006756,0.01653,0.909024,0,-0.245674,1.099526,-0.018169,0,1.929726,3.206104,0.029417,1],
+				"geometry": "658EB01F-5C86-429F-B4D2-94A01D9478ED",
+				"material": "85674350-50F5-4C70-BC80-90DEBAAB5818"
+			},
+			{
+				"uuid": "C5821EB1-D69E-4182-B328-DF78EEC9CBF2",
+				"type": "Mesh",
+				"name": "Circle",
+				"layers": 1,
+				"matrix": [1.823271,-0.271236,0.132814,0,0.066516,0.003124,-0.906758,0,0.164649,1.114577,0.015918,0,-1.983492,3.058032,-0.078062,1],
+				"geometry": "658EB01F-5C86-429F-B4D2-94A01D9478ED",
+				"material": "519C895E-FC93-4F47-A562-F237479B09D3"
+			},
+			{
+				"uuid": "1F33AA69-04A4-42E2-B5A3-6ABF2363384D",
+				"type": "Mesh",
+				"name": "Sphere",
+				"layers": 1,
+				"matrix": [1,0,0,0,0,0.843635,0,0,0,0,0.661404,0,0,1.854459,-1.110753,1],
+				"geometry": "6664CA02-597E-4D11-9E89-53A802353A1B",
+				"material": "7B50DB34-5BF1-4F4D-A38D-6633B526DC88"
+			},
+			{
+				"uuid": "75CE1B1B-F18C-4880-9B90-D3F45D2390C6",
+				"type": "Mesh",
+				"name": "Sphere",
+				"layers": 1,
+				"matrix": [0.857191,0.024273,-0.064534,0,-0.000913,0.84013,0.303876,0,0.138832,-0.586994,1.623288,0,0,1.511586,0.989113,1],
+				"geometry": "B73B163D-1E7C-4E6C-B1B3-6073F5CCA48C",
+				"material": "FE49E51A-7E8A-4D4D-AE25-B6B9C7AE7E0D"
+			},
+			{
+				"uuid": "27BE6CEE-6F83-4B00-81CF-B993239DB3E4",
+				"type": "Mesh",
+				"name": "Sphere",
+				"layers": 1,
+				"matrix": [1,0,0,0,0,1,0,0,0,0,1,0,0,1.848451,0,1],
+				"geometry": "72D11894-5744-4F8F-9218-742422E683AF",
+				"material": "AB5EEE80-374B-4080-A103-A6726DA653D9"
+			}],
+		"background": 11184810,
+		"fog": {
+			"type": "Fog",
+			"color": 11184810,
+			"near": 0.1,
+			"far": 50
+		}
+	}
+}

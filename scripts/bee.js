@@ -13,8 +13,6 @@ let mousePos = {
     y: 0
 };
 
-let ADD = 40;
-
 window.addEventListener("load", init, false);
 
 function init() {
@@ -249,8 +247,6 @@ let Bee = function () {
     this.dard.position.y -= 10;
     this.dard.rotation.x = Math.PI * 1.6;
     this.mesh.add(this.dard);
-
-
 };
 
 Sea = function () {
@@ -299,7 +295,7 @@ Sea.prototype.moveWaves = function () {
 
     this.mesh.geometry.verticesNeedUpdate = true;
 
-    sea.mesh.rotation.z += 0.005;
+    sea.mesh.rotation.z += 0.1;
 };
 
 function createBee() {
@@ -333,20 +329,28 @@ function updateBee() {
         }
     }
 
-    bee.wings.geometry.vertices[0].y -= ADD;
-    bee.wings.geometry.vertices[1].y -= ADD;
-    bee.wings.geometry.vertices[2].y -= ADD;
+    if (targetZ > -40) {
+        targetZ = -40;
+    } else if (targetZ < -100) {
+        targetZ = -100;
+    }
 
-    bee.wings.geometry.vertices[4].y -= ADD;
-    bee.wings.geometry.vertices[5].y -= ADD;
-    bee.wings.geometry.vertices[6].y -= ADD;
-
-    bee.wings.geometry.verticesNeedUpdate = true;
+    let normalisedSpeed = Math.sqrt(targetZ * targetZ);
 
     if (bee.wings.geometry.vertices[0].y < 0
-        || bee.wings.geometry.vertices[0].y > 100) {
-        ADD *= -1;
+        || bee.wings.geometry.vertices[0].y > 200) {
+        normalisedSpeed *= -1;
     }
+
+    bee.wings.geometry.vertices[0].y -= normalisedSpeed;
+    bee.wings.geometry.vertices[1].y -= normalisedSpeed;
+    bee.wings.geometry.vertices[2].y -= normalisedSpeed;
+
+    bee.wings.geometry.vertices[4].y -= normalisedSpeed;
+    bee.wings.geometry.vertices[5].y -= normalisedSpeed;
+    bee.wings.geometry.vertices[6].y -= normalisedSpeed;
+
+    bee.wings.geometry.verticesNeedUpdate = true;
 
     bee.mesh.rotation.z = 0;
 }
@@ -396,10 +400,6 @@ function createParticle() {
 }
 
 function loop() {
-    let a = 0.01;
-    bee.mesh.position.y += Math.sin(a);
-    bee.mesh.rotation.z += Math.sin(a);
-
     renderer.render(scene, camera);
     updateBee();
     requestAnimationFrame(loop);

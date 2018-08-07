@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e07f4d4b-9711-47da-92fa-e0db4c5d654f" name="Default" comment="feat(Bees): the bee is flying, i repeat, the bee is flying">
+    <list default="true" id="e07f4d4b-9711-47da-92fa-e0db4c5d654f" name="Default" comment="feat(Bees): bee moves wings faster depending on it's distance from camera">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/bee.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/bee.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,17 +17,18 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="js" value="1733" />
-          <entry key="txt" value="87" />
+          <entry key="txt" value="177" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JavaScript" value="1733" />
-          <entry key="PLAIN_TEXT" value="87" />
+          <entry key="PLAIN_TEXT" value="177" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
+          <entry key="gitignore" value="1" />
           <entry key="js" value="4" />
           <entry key="ts" value="1" />
         </counts>
@@ -35,6 +36,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="JavaScript" value="4" />
+          <entry key="PLAIN_TEXT" value="1" />
           <entry key="TypeScript" value="1" />
         </counts>
       </usages-collector>
@@ -60,11 +62,20 @@
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/bee.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="343" column="4" selection-start-line="343" selection-start-column="4" selection-end-line="343" selection-end-column="4" />
+            <state relative-caret-position="255">
+              <caret line="344" column="56" lean-forward="true" selection-start-line="344" selection-start-column="56" selection-end-line="344" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="658">
+              <caret line="183" lean-forward="true" selection-start-line="183" selection-end-line="183" />
             </state>
           </provider>
         </entry>
@@ -106,9 +117,9 @@
         <option value="$PROJECT_DIR$/scripts/explosion.js" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/style.css" />
-        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
         <option value="$PROJECT_DIR$/scripts/bee.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -133,8 +144,8 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="51" />
-    <option name="y" value="23" />
+    <option name="x" value="309" />
+    <option name="y" value="140" />
     <option name="width" value="1389" />
     <option name="height" value="877" />
   </component>
@@ -268,7 +279,7 @@
       <workItem from="1533535876029" duration="2545000" />
       <workItem from="1533575877872" duration="269000" />
       <workItem from="1533622920189" duration="2688000" />
-      <workItem from="1533640415601" duration="2396000" />
+      <workItem from="1533640415601" duration="2481000" />
     </task>
     <task id="LOCAL-00001" summary="feat(SolarSystem): add first planet">
       <created>1533106970843</created>
@@ -326,11 +337,18 @@
       <option name="project" value="LOCAL" />
       <updated>1533625933387</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="feat(Bees): bee moves wings faster depending on it's distance from camera">
+      <created>1533643202915</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1533643202915</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31346000" />
+    <option name="totallyTimeSpent" value="31431000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -342,7 +360,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="51" y="23" width="1389" height="877" extended-state="6" />
+    <frame x="309" y="140" width="1389" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
@@ -385,7 +403,8 @@
     <MESSAGE value="feat(Birds): git" />
     <MESSAGE value="feat(Bees): add bee geometry" />
     <MESSAGE value="feat(Bees): the bee is flying, i repeat, the bee is flying" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(Bees): the bee is flying, i repeat, the bee is flying" />
+    <MESSAGE value="feat(Bees): bee moves wings faster depending on it's distance from camera" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(Bees): bee moves wings faster depending on it's distance from camera" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/node_modules/three/examples/js/loaders/XLoader.js">
@@ -399,13 +418,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="98">
           <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>
@@ -467,8 +479,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/bee.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="343" column="4" selection-start-line="343" selection-start-column="4" selection-end-line="343" selection-end-column="4" />
+        <state relative-caret-position="255">
+          <caret line="344" column="56" lean-forward="true" selection-start-line="344" selection-start-column="56" selection-end-line="344" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="658">
+          <caret line="183" lean-forward="true" selection-start-line="183" selection-end-line="183" />
         </state>
       </provider>
     </entry>

@@ -12,6 +12,9 @@ let mousePos = {
     x: 0,
     y: 0
 };
+
+let ADD = 40;
+
 window.addEventListener("load", init, false);
 
 function init() {
@@ -19,7 +22,7 @@ function init() {
     createLights();
     createBee();
     createParticle();
-    // createSea();
+    createSea();
     document.addEventListener("mousemove", handleMouseMove, false);
     loop();
 }
@@ -113,7 +116,7 @@ function createLights() {
     scene.add(shadowLight);
 }
 
-let Bee =  function() {
+let Bee = function () {
     this.mesh = new THREE.Object3D();
 
     //HEAD
@@ -198,47 +201,39 @@ let Bee =  function() {
     this.head.position.y -= 10;
     this.mesh.add(this.tail);
 
-    //WING1
-    let geomSideWing1 = new THREE.BoxGeometry(100, 2, 130, 1, 1, 1);
-    let matSideWing1 = new THREE.MeshPhongMaterial({
-        color: Colors.blue,
-        shading: THREE.FlatShading
+    //WINGS
+    let geomWing = new THREE.Geometry();
+
+    geomWing.vertices.push(new THREE.Vector3(150, 100, -100));
+    geomWing.vertices.push(new THREE.Vector3(200, 100, 50));
+    geomWing.vertices.push(new THREE.Vector3(150, 100, 150));
+    geomWing.vertices.push(new THREE.Vector3(0, 0, 0));
+
+    geomWing.vertices.push(new THREE.Vector3(-150, 100, -100));
+    geomWing.vertices.push(new THREE.Vector3(-200, 100, 50));
+    geomWing.vertices.push(new THREE.Vector3(-150, 100, 150));
+    geomWing.vertices.push(new THREE.Vector3(0, 0, 0));
+
+    geomWing.faces.push(new THREE.Face3(0, 1, 2));
+    geomWing.faces.push(new THREE.Face3(0, 3, 2));
+
+    geomWing.faces.push(new THREE.Face3(4, 5, 6));
+    geomWing.faces.push(new THREE.Face3(4, 6, 7));
+
+    let material = new THREE.MeshBasicMaterial({
+        color: Colors.white,
+        transparent: true,
+        opacity: 0.5,
+        side: THREE.DoubleSide
     });
 
-    geomSideWing1.vertices[4].z -= 40;
-    geomSideWing1.vertices[5].z -= 40;
-    geomSideWing1.vertices[6].z -= 40;
-    geomSideWing1.vertices[7].z -= 40;
-
-    this.sideWing1 = new THREE.Mesh(geomSideWing1, matSideWing1);
-    this.sideWing1.castShadow = true;
-    this.sideWing1.receiveShadow = true;
-    this.sideWing1.position.z -= 35;
-    this.sideWing1.position.y += 70;
-    this.sideWing1.position.x += 110;
-    this.sideWing1.rotation.y = .8;
-    this.mesh.add(this.sideWing1);
-
-    //WING2
-    let geomSideWing2 = new THREE.BoxGeometry(100, 2, 130, 1, 1, 1);
-    let matSideWing2 = new THREE.MeshPhongMaterial({
-        color: Colors.blue,
-        shading: THREE.FlatShading
-    });
-
-    geomSideWing2.vertices[4].z -= 40;
-    geomSideWing2.vertices[5].z -= 40;
-    geomSideWing2.vertices[6].z -= 40;
-    geomSideWing2.vertices[7].z -= 40;
-
-    this.sideWing2 = new THREE.Mesh(geomSideWing2, matSideWing2);
-    this.sideWing2.castShadow = true;
-    this.sideWing2.receiveShadow = true;
-    this.sideWing2.position.z -= 50;
-    this.sideWing2.position.y += 70;
-    this.sideWing2.position.x -= 80;
-    this.sideWing2.rotation.y = 1.2;
-    this.mesh.add(this.sideWing2);
+    this.wings = new THREE.Mesh(geomWing, material);
+    this.wings.castShadow = true;
+    this.wings.receiveShadow = true;
+    this.wings.position.x = 0;
+    this.wings.position.y = 75;
+    this.wings.position.z = -65;
+    this.mesh.add(this.wings);
 
     //STING
     let geomDard = new THREE.CylinderGeometry(20, 0, 50, 10);
@@ -252,7 +247,7 @@ let Bee =  function() {
     this.dard.receiveShadow = true;
     this.dard.position.z += 50;
     this.dard.position.y -= 10;
-    this.dard.rotation.x = Math.PI*1.6;
+    this.dard.rotation.x = Math.PI * 1.6;
     this.mesh.add(this.dard);
 
 
@@ -327,15 +322,30 @@ function updateBee() {
     bee.mesh.position.x += (targetX - bee.mesh.position.x) * 0.1;
     bee.mesh.position.z += (targetZ - bee.mesh.position.z) * 0.1;
     if (targetZ > 0) {
-        // sea.mesh.rotation.x += 0.002 + targetZ / 100000;
+        sea.mesh.rotation.x += 0.002 + targetZ / 100000;
         for (let i = 0; i < p.length; i++) {
             p[i].mesh.rotation.x += 0.001 + targetZ / 300000;
         }
     } else {
-        // sea.mesh.rotation.x += 0.005 + -targetZ / 10000;
+        sea.mesh.rotation.x += 0.005 + -targetZ / 10000;
         for (let i = 0; i < p.length; i++) {
             p[i].mesh.rotation.x += 0.001 + -targetZ / 30000;
         }
+    }
+
+    bee.wings.geometry.vertices[0].y -= ADD;
+    bee.wings.geometry.vertices[1].y -= ADD;
+    bee.wings.geometry.vertices[2].y -= ADD;
+
+    bee.wings.geometry.vertices[4].y -= ADD;
+    bee.wings.geometry.vertices[5].y -= ADD;
+    bee.wings.geometry.vertices[6].y -= ADD;
+
+    bee.wings.geometry.verticesNeedUpdate = true;
+
+    if (bee.wings.geometry.vertices[0].y < 0
+        || bee.wings.geometry.vertices[0].y > 100) {
+        ADD *= -1;
     }
 
     bee.mesh.rotation.z = 0;
@@ -387,11 +397,9 @@ function createParticle() {
 
 function loop() {
     let a = 0.01;
-    // bee.mesh.position.y += Math.sin(a);
-    // bee.mesh.rotation.z += Math.sin(a);
+    bee.mesh.position.y += Math.sin(a);
+    bee.mesh.rotation.z += Math.sin(a);
 
-    //bee.mesh.rotation.y += a;
-    //bee.mesh.rotation.x += a;
     renderer.render(scene, camera);
     updateBee();
     requestAnimationFrame(loop);

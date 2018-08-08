@@ -1,5 +1,5 @@
 let Colors = {
-    red: 0xf25346,
+    green: 0x2bca2b,
     black: 0x333359,
     white: 0xd8d0d1,
     pink: 0xf5986e,
@@ -20,6 +20,7 @@ function init() {
     createLights();
     createBee();
     createParticle();
+    createFloor();
     createSea();
     document.addEventListener("mousemove", handleMouseMove, false);
     loop();
@@ -52,7 +53,7 @@ function createScene() {
         farBee
     );
 
-    scene.fog = new THREE.Fog(0xf58585, 100, 780);
+    scene.fog = new THREE.Fog(0x2e712e, 100, 780);
 
     camera.position.x = 0;
     camera.position.z = 220;
@@ -95,8 +96,8 @@ let ambientLight, hemisphereLight, shadowLight;
 function createLights() {
     hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9);
 
-    shadowLight = new THREE.DirectionalLight(0xffffff, 0.9);
-    shadowLight.position.set(150, 420, 350);
+    shadowLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    shadowLight.position.set(150, 490, 350);
     shadowLight.castShadow = true;
     shadowLight.shadow.camera.left = -400;
     shadowLight.shadow.camera.right = 400;
@@ -107,7 +108,7 @@ function createLights() {
     shadowLight.shadow.mapSize.width = 2048;
     shadowLight.shadow.mapSize.height = 2048;
 
-    ambientLight = new THREE.AmbientLight(0xff8d8d, 0.5);
+    ambientLight = new THREE.AmbientLight(0xff8d8d, 0.9);
 
     scene.add(ambientLight);
     scene.add(hemisphereLight);
@@ -249,28 +250,28 @@ let Bee = function () {
     this.mesh.add(this.dard);
 };
 
-Sea = function () {
+Floor = function () {
     let geom = new THREE.CylinderGeometry(500, 500, 2900, 33, 34);
     geom.mergeVertices();
     let l = geom.vertices.length;
-    this.waves = [];
+    this.hills = [];
 
     for (let i = 0; i < l; i++) {
         let v = geom.vertices[i];
 
-        this.waves.push({
+        this.hills.push({
             y: v.y,
             x: v.x,
             z: v.z,
             ang: Math.random() * Math.PI * 2,
-            amp: 20 + Math.random() * 15,
-            speed: 0.016 + Math.random() * 0.032
+            amp: 20 + Math.random() * 60,
+            speed: 6 + Math.random() * 0.032
         });
     }
 
     let mat = new THREE.MeshPhongMaterial({
-        color: 0x54b2a9,
-        opacity: 0.9,
+        color: 0x671f02,
+        opacity: 0.6,
         shading: THREE.FlatShading
     });
 
@@ -280,13 +281,13 @@ Sea = function () {
     this.mesh.position.y -= 700;
 };
 
-Sea.prototype.moveWaves = function () {
+Floor.prototype.moveHills = function () {
     let verts = this.mesh.geometry.vertices;
     let l = verts.length;
 
     for (let i = 0; i < l; i++) {
         let v = verts[i];
-        let vprops = this.waves[i];
+        let vprops = this.hills[i];
         v.x = vprops.x + Math.cos(vprops.ang) * vprops.amp;
         v.y = vprops.y + Math.sin(vprops.ang) * vprops.amp;
 
@@ -295,7 +296,23 @@ Sea.prototype.moveWaves = function () {
 
     this.mesh.geometry.verticesNeedUpdate = true;
 
-    sea.mesh.rotation.z += 0.1;
+    floor.mesh.rotation.z += 0.1;
+};
+
+Sea = function () {
+    let geom = new THREE.CylinderGeometry(480, 480, 2900, 100, 34);
+    geom.mergeVertices();
+
+    let mat = new THREE.MeshPhongMaterial({
+        color: 0x00c0ff,
+        opacity: 0.4,
+        shading: THREE.FlatShading
+    });
+
+    this.mesh = new THREE.Mesh(geom, mat);
+    this.mesh.receiveShadow = true;
+    this.mesh.rotation.z += Math.PI / 2;
+    this.mesh.position.y -= 700;
 };
 
 function createBee() {
@@ -306,9 +323,14 @@ function createBee() {
     scene.add(bee.mesh);
 }
 
+function createFloor() {
+    floor = new Floor();
+    floor.moveHills();
+    scene.add(floor.mesh);
+}
+
 function createSea() {
     sea = new Sea();
-    sea.moveWaves();
     scene.add(sea.mesh);
 }
 
@@ -318,12 +340,12 @@ function updateBee() {
     bee.mesh.position.x += (targetX - bee.mesh.position.x) * 0.1;
     bee.mesh.position.z += (targetZ - bee.mesh.position.z) * 0.1;
     if (targetZ > 0) {
-        sea.mesh.rotation.x += 0.002 + targetZ / 100000;
+        floor.mesh.rotation.x += 0.002 + targetZ / 100000;
         for (let i = 0; i < p.length; i++) {
             p[i].mesh.rotation.x += 0.001 + targetZ / 300000;
         }
     } else {
-        sea.mesh.rotation.x += 0.005 + -targetZ / 10000;
+        floor.mesh.rotation.x += 0.005 + -targetZ / 10000;
         for (let i = 0; i < p.length; i++) {
             p[i].mesh.rotation.x += 0.001 + -targetZ / 30000;
         }
@@ -373,9 +395,8 @@ let Particle = function () {
 
     geom = new THREE.BoxGeometry(this.side, this.side, this.side, 1, 1, 1);
 
-    mat = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        shading: THREE.FlatShading
+    mat = new THREE.MeshStandardMaterial({
+        color: 0x6cff6c,
     });
 
     let xAxis = this.radius * Math.cos(this.s) * Math.sin(this.t);

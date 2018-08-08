@@ -263,8 +263,8 @@ Floor = function () {
             y: v.y,
             x: v.x,
             z: v.z,
-            ang: Math.random() * Math.PI * 2,
-            amp: 20 + Math.random() * 60,
+            ang: Math.random() * Math.PI * 2 +10,
+            amp: 20 + Math.random() * 30,
             speed: 6 + Math.random() * 0.032
         });
     }

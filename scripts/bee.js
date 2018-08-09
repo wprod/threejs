@@ -13,7 +13,19 @@ let mousePos = {
     y: 0,
 };
 
+let scene,
+    fieldOfView,
+    aspectRatio,
+    nearBee,
+    farBee,
+    renderer,
+    container;
+
+let HEIGHT, WIDTH;
+
 let coins = [];
+
+let ambientLight, hemisphereLight, shadowLight;
 
 window.addEventListener('load', init, false);
 
@@ -27,16 +39,6 @@ function init() {
     document.addEventListener('mousemove', handleMouseMove, false);
     loop();
 }
-
-let scene,
-    fieldOfView,
-    aspectRatio,
-    nearBee,
-    farBee,
-    renderer,
-    container;
-
-let HEIGHT, WIDTH;
 
 function createScene() {
     HEIGHT = window.innerHeight;
@@ -55,7 +57,7 @@ function createScene() {
         farBee,
     );
 
-    scene.fog = new THREE.Fog(0x2e712e, 100, 780);
+    scene.fog = new THREE.Fog(0x2e712e, 100, 980);
 
     camera.position.x = 0;
     camera.position.z = 220;
@@ -72,28 +74,6 @@ function createScene() {
     renderer.render(scene, camera);
     window.addEventListener('resize', handleWindowResize, false);
 }
-
-function handleWindowResize() {
-    HEIGHT = window.innerHeight;
-    WIDTH = window.innerWidth;
-
-    renderer.setSize(WIDTH, HEIGHT);
-
-    camera.aspect = WIDTH / HEIGHT;
-    camera.updateProjectionMatrix();
-}
-
-function handleMouseMove(event) {
-    let tx = -1 + event.clientX / WIDTH * 2;
-    let ty = 1 - event.clientY / HEIGHT * 2;
-
-    mousePos = {
-        x: tx,
-        y: ty,
-    };
-}
-
-let ambientLight, hemisphereLight, shadowLight;
 
 function createLights() {
     hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9);
@@ -117,6 +97,74 @@ function createLights() {
     scene.add(shadowLight);
 }
 
+function createCoin() {
+    for (let i = 0; i < 100; i++) {
+        coins[i] = new Coin();
+        scene.add(coins[i].mesh);
+    }
+}
+
+function createBee() {
+    bee = new Bee();
+    bee.mesh.scale.set(0.25, 0.25, 0.25);
+    bee.mesh.position.y = 0;
+    bee.mesh.position.z = 0;
+    scene.add(bee.mesh);
+}
+
+function createFloor() {
+    floor = new Floor();
+    floor.moveHills();
+    scene.add(floor.mesh);
+}
+
+function createSea() {
+    sea = new Sea();
+    scene.add(sea.mesh);
+}
+
+// =============================
+// ========= UTILITIES =========
+// =============================
+function handleWindowResize() {
+    HEIGHT = window.innerHeight;
+    WIDTH = window.innerWidth;
+
+    renderer.setSize(WIDTH, HEIGHT);
+
+    camera.aspect = WIDTH / HEIGHT;
+    camera.updateProjectionMatrix();
+}
+
+function handleMouseMove(event) {
+    let tx = -1 + event.clientX / WIDTH * 2;
+    let ty = 1 - event.clientY / HEIGHT * 2;
+
+    mousePos = {
+        x: tx,
+        y: ty,
+    };
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// NORMALIZER
+function normalize(v, vmin, vmax, tmin, tmax) {
+    let nv = Math.max(Math.min(v, vmax), vmin);
+    let dv = vmax - vmin;
+    let pc = (nv - vmin) / dv;
+    let dt = tmax - tmin;
+    let tv = tmin + pc * dt;
+    return tv;
+}
+
+// =============================
+// ============ BEE ============
+// =============================
 let Bee = function () {
     this.mesh = new THREE.Object3D();
 
@@ -252,6 +300,9 @@ let Bee = function () {
     this.mesh.add(this.dard);
 };
 
+// =============================
+// =========== FLOOR ===========
+// =============================
 let Floor = function () {
     let geom = new THREE.CylinderGeometry(500, 500, 2900, 33, 34);
     geom.mergeVertices();
@@ -301,6 +352,9 @@ Floor.prototype.moveHills = function () {
     floor.mesh.rotation.z += 0.1;
 };
 
+// =============================
+// ============ SEA ============
+// =============================
 let Sea = function () {
     let geom = new THREE.CylinderGeometry(480, 480, 2900, 100, 34);
     geom.mergeVertices();
@@ -316,25 +370,6 @@ let Sea = function () {
     this.mesh.rotation.z += Math.PI / 2;
     this.mesh.position.y -= 700;
 };
-
-function createBee() {
-    bee = new Bee();
-    bee.mesh.scale.set(0.25, 0.25, 0.25);
-    bee.mesh.position.y = 0;
-    bee.mesh.position.z = 0;
-    scene.add(bee.mesh);
-}
-
-function createFloor() {
-    floor = new Floor();
-    floor.moveHills();
-    scene.add(floor.mesh);
-}
-
-function createSea() {
-    sea = new Sea();
-    scene.add(sea.mesh);
-}
 
 let Coin = function () {
     this.mesh = new THREE.Object3D();
@@ -367,13 +402,6 @@ let Coin = function () {
     this.mesh.position.y -= 1200;
     this.mesh.add(this.coin);
 };
-
-function createCoin() {
-    for (let i = 0; i < 300; i++) {
-        coins[i] = new Coin();
-        scene.add(coins[i].mesh);
-    }
-}
 
 function updateBee() {
     let targetX = normalize(mousePos.x, -1, 1, -100, 100);
@@ -428,20 +456,4 @@ function loop() {
     renderer.render(scene, camera);
     updateBee();
     requestAnimationFrame(loop);
-}
-
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
-}
-
-// <3
-function normalize(v, vmin, vmax, tmin, tmax) {
-    let nv = Math.max(Math.min(v, vmax), vmin);
-    let dv = vmax - vmin;
-    let pc = (nv - vmin) / dv;
-    let dt = tmax - tmin;
-    let tv = tmin + pc * dt;
-    return tv;
 }

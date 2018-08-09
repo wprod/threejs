@@ -10,19 +10,21 @@ let Colors = {
 
 let mousePos = {
     x: 0,
-    y: 0
+    y: 0,
 };
 
-window.addEventListener("load", init, false);
+let coins = [];
+
+window.addEventListener('load', init, false);
 
 function init() {
     createScene();
     createLights();
     createBee();
-    createParticle();
+    createCoin();
     createFloor();
     createSea();
-    document.addEventListener("mousemove", handleMouseMove, false);
+    document.addEventListener('mousemove', handleMouseMove, false);
     loop();
 }
 
@@ -50,7 +52,7 @@ function createScene() {
         fieldOfView,
         aspectRatio,
         nearBee,
-        farBee
+        farBee,
     );
 
     scene.fog = new THREE.Fog(0x2e712e, 100, 780);
@@ -64,11 +66,11 @@ function createScene() {
     renderer.setSize(WIDTH, HEIGHT);
     renderer.shadowMap.enabled = true;
 
-    container = document.getElementById("world");
+    container = document.getElementById('world');
     container.appendChild(renderer.domElement);
 
     renderer.render(scene, camera);
-    window.addEventListener("resize", handleWindowResize, false);
+    window.addEventListener('resize', handleWindowResize, false);
 }
 
 function handleWindowResize() {
@@ -87,7 +89,7 @@ function handleMouseMove(event) {
 
     mousePos = {
         x: tx,
-        y: ty
+        y: ty,
     };
 }
 
@@ -122,7 +124,7 @@ let Bee = function () {
     let geomHead = new THREE.SphereGeometry(55, 32, 32);
     let matHead = new THREE.MeshPhongMaterial({
         color: Colors.black,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
     });
 
     this.head = new THREE.Mesh(geomHead, matHead);
@@ -136,7 +138,7 @@ let Bee = function () {
     let geomBody1 = new THREE.SphereGeometry(65, 32, 32);
     let matBody1 = new THREE.MeshPhongMaterial({
         color: Colors.yellow,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
     });
 
     this.body1 = new THREE.Mesh(geomBody1, matBody1);
@@ -149,7 +151,7 @@ let Bee = function () {
     let geomBody2 = new THREE.SphereGeometry(70, 32, 32);
     let matBody2 = new THREE.MeshPhongMaterial({
         color: Colors.black,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
     });
 
     this.body2 = new THREE.Mesh(geomBody2, matBody2);
@@ -162,7 +164,7 @@ let Bee = function () {
     let geomBodyWing = new THREE.SphereGeometry(30, 32, 32);
     let matBodyWing = new THREE.MeshPhongMaterial({
         color: Colors.black,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
     });
 
     this.bodyWing = new THREE.Mesh(geomBodyWing, matBodyWing);
@@ -176,7 +178,7 @@ let Bee = function () {
     let geomBody3 = new THREE.SphereGeometry(65, 32, 32);
     let matBody3 = new THREE.MeshPhongMaterial({
         color: Colors.yellow,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
     });
 
     this.body3 = new THREE.Mesh(geomBody3, matBody3);
@@ -190,7 +192,7 @@ let Bee = function () {
     let geomTail = new THREE.SphereGeometry(45, 32, 32);
     let matTail = new THREE.MeshPhongMaterial({
         color: Colors.black,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
     });
 
     this.tail = new THREE.Mesh(geomTail, matTail);
@@ -223,7 +225,7 @@ let Bee = function () {
         color: Colors.white,
         transparent: true,
         opacity: 0.5,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
     });
 
     this.wings = new THREE.Mesh(geomWing, material);
@@ -238,7 +240,7 @@ let Bee = function () {
     let geomDard = new THREE.CylinderGeometry(20, 0, 50, 10);
     let matDard = new THREE.MeshPhongMaterial({
         color: Colors.white,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
     });
 
     this.dard = new THREE.Mesh(geomDard, matDard);
@@ -250,7 +252,7 @@ let Bee = function () {
     this.mesh.add(this.dard);
 };
 
-Floor = function () {
+let Floor = function () {
     let geom = new THREE.CylinderGeometry(500, 500, 2900, 33, 34);
     geom.mergeVertices();
     let l = geom.vertices.length;
@@ -263,16 +265,16 @@ Floor = function () {
             y: v.y,
             x: v.x,
             z: v.z,
-            ang: Math.random() * Math.PI * 2 +10,
+            ang: Math.random() * Math.PI * 2 + 10,
             amp: 20 + Math.random() * 30,
-            speed: 6 + Math.random() * 0.032
+            speed: 6 + Math.random() * 0.032,
         });
     }
 
     let mat = new THREE.MeshPhongMaterial({
         color: 0x671f02,
         opacity: 0.6,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
     });
 
     this.mesh = new THREE.Mesh(geom, mat);
@@ -299,14 +301,14 @@ Floor.prototype.moveHills = function () {
     floor.mesh.rotation.z += 0.1;
 };
 
-Sea = function () {
+let Sea = function () {
     let geom = new THREE.CylinderGeometry(480, 480, 2900, 100, 34);
     geom.mergeVertices();
 
     let mat = new THREE.MeshPhongMaterial({
         color: 0x00c0ff,
         opacity: 0.4,
-        shading: THREE.FlatShading
+        shading: THREE.FlatShading,
     });
 
     this.mesh = new THREE.Mesh(geom, mat);
@@ -334,20 +336,65 @@ function createSea() {
     scene.add(sea.mesh);
 }
 
+let Coin = function () {
+    this.mesh = new THREE.Object3D();
+    this.radius = 1200;
+    this.side = 20;
+    this.s = Math.PI * getRandomInt(0, 360) / 180;
+    this.t = Math.PI * getRandomInt(0, 360) / 180;
+
+    geom = new THREE.CylinderGeometry(this.side, this.side, 5, 32);
+    mat = new THREE.MeshPhongMaterial({
+        color: Colors.yellow,
+        opacity: 0.8,
+        shading: THREE.FlatShading,
+    });
+
+    this.coin = new THREE.Mesh(geom, mat);
+    this.coin.receiveShadow = true;
+    this.coin.castShadow = true;
+
+    let xAxis = this.radius * Math.cos(this.s) * Math.sin(this.t);
+    let yAxis = this.radius * Math.sin(this.s) * Math.sin(this.t);
+    let zAxis = this.radius * Math.cos(this.t);
+
+    this.coin.position.x = xAxis;
+    this.coin.position.y = yAxis;
+    this.coin.position.z = zAxis;
+    this.coin.rotation.z = zAxis;
+    this.coin.rotation.x = zAxis;
+    this.coin.rotation.y = zAxis;
+    this.mesh.position.y -= 1200;
+    this.mesh.add(this.coin);
+};
+
+function createCoin() {
+    for (let i = 0; i < 300; i++) {
+        coins[i] = new Coin();
+        scene.add(coins[i].mesh);
+    }
+}
+
 function updateBee() {
     let targetX = normalize(mousePos.x, -1, 1, -100, 100);
     let targetZ = normalize(mousePos.y, -1, 1, 100, -200);
+
     bee.mesh.position.x += (targetX - bee.mesh.position.x) * 0.1;
     bee.mesh.position.z += (targetZ - bee.mesh.position.z) * 0.1;
+
+    bee.mesh.rotation.x = (targetZ - bee.mesh.position.z) * 0.01;
+    bee.mesh.rotation.y = (targetX - bee.mesh.position.x) * 0.01;
+
+
     if (targetZ > 0) {
         floor.mesh.rotation.x += 0.002 + targetZ / 100000;
-        for (let i = 0; i < p.length; i++) {
-            p[i].mesh.rotation.x += 0.001 + targetZ / 300000;
+        for (let i = 0; i < coins.length; i++) {
+            coins[i].mesh.rotation.x += 0.001 + targetZ / 300000;
         }
     } else {
         floor.mesh.rotation.x += 0.005 + -targetZ / 10000;
-        for (let i = 0; i < p.length; i++) {
-            p[i].mesh.rotation.x += 0.001 + -targetZ / 30000;
+        for (let i = 0; i < coins.length; i++) {
+            coins[i].mesh.rotation.x += 0.001 + -targetZ / 30000;
         }
     }
 
@@ -377,49 +424,6 @@ function updateBee() {
     bee.mesh.rotation.z = 0;
 }
 
-function normalize(v, vmin, vmax, tmin, tmax) {
-    let nv = Math.max(Math.min(v, vmax), vmin);
-    let dv = vmax - vmin;
-    let pc = (nv - vmin) / dv;
-    let dt = tmax - tmin;
-    let tv = tmin + pc * dt;
-    return tv;
-}
-
-let Particle = function () {
-    this.mesh = new THREE.Object3D();
-    this.radius = 1400;
-    this.side = 3;
-    this.s = Math.PI * getRandomInt(0, 360) / 180;
-    this.t = Math.PI * getRandomInt(0, 360) / 180;
-
-    geom = new THREE.BoxGeometry(this.side, this.side, this.side, 1, 1, 1);
-
-    mat = new THREE.MeshStandardMaterial({
-        color: 0x6cff6c,
-    });
-
-    let xAxis = this.radius * Math.cos(this.s) * Math.sin(this.t);
-    let yAxis = this.radius * Math.sin(this.s) * Math.sin(this.t);
-    let zAxis = this.radius * Math.cos(this.t);
-
-    this.par = new THREE.Mesh(geom, mat);
-    this.par.position.x = xAxis;
-    this.par.position.y = yAxis;
-    this.par.position.z = zAxis;
-
-    this.mesh.add(this.par);
-};
-
-let p = [];
-
-function createParticle() {
-    for (let i = 0; i < 1000; i++) {
-        p[i] = new Particle();
-        scene.add(p[i].mesh);
-    }
-}
-
 function loop() {
     renderer.render(scene, camera);
     updateBee();
@@ -430,4 +434,14 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// <3
+function normalize(v, vmin, vmax, tmin, tmax) {
+    let nv = Math.max(Math.min(v, vmax), vmin);
+    let dv = vmax - vmin;
+    let pc = (nv - vmin) / dv;
+    let dt = tmax - tmin;
+    let tv = tmin + pc * dt;
+    return tv;
 }

@@ -172,7 +172,7 @@ let Bee = function () {
     let geomHead = new THREE.SphereGeometry(55, 32, 32);
     let matHead = new THREE.MeshPhongMaterial({
         color: Colors.black,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.head = new THREE.Mesh(geomHead, matHead);
@@ -186,7 +186,7 @@ let Bee = function () {
     let geomBody1 = new THREE.SphereGeometry(65, 32, 32);
     let matBody1 = new THREE.MeshPhongMaterial({
         color: Colors.yellow,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.body1 = new THREE.Mesh(geomBody1, matBody1);
@@ -199,7 +199,7 @@ let Bee = function () {
     let geomBody2 = new THREE.SphereGeometry(70, 32, 32);
     let matBody2 = new THREE.MeshPhongMaterial({
         color: Colors.black,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.body2 = new THREE.Mesh(geomBody2, matBody2);
@@ -212,7 +212,7 @@ let Bee = function () {
     let geomBodyWing = new THREE.SphereGeometry(30, 32, 32);
     let matBodyWing = new THREE.MeshPhongMaterial({
         color: Colors.black,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.bodyWing = new THREE.Mesh(geomBodyWing, matBodyWing);
@@ -226,7 +226,7 @@ let Bee = function () {
     let geomBody3 = new THREE.SphereGeometry(65, 32, 32);
     let matBody3 = new THREE.MeshPhongMaterial({
         color: Colors.yellow,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.body3 = new THREE.Mesh(geomBody3, matBody3);
@@ -240,7 +240,7 @@ let Bee = function () {
     let geomTail = new THREE.SphereGeometry(45, 32, 32);
     let matTail = new THREE.MeshPhongMaterial({
         color: Colors.black,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.tail = new THREE.Mesh(geomTail, matTail);
@@ -288,7 +288,7 @@ let Bee = function () {
     let geomDard = new THREE.CylinderGeometry(20, 0, 50, 10);
     let matDard = new THREE.MeshPhongMaterial({
         color: Colors.white,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.dard = new THREE.Mesh(geomDard, matDard);
@@ -325,7 +325,7 @@ let Floor = function () {
     let mat = new THREE.MeshPhongMaterial({
         color: 0x671f02,
         opacity: 0.6,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.mesh = new THREE.Mesh(geom, mat);
@@ -362,7 +362,7 @@ let Sea = function () {
     let mat = new THREE.MeshPhongMaterial({
         color: 0x00c0ff,
         opacity: 0.4,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.mesh = new THREE.Mesh(geom, mat);
@@ -382,7 +382,7 @@ let Coin = function () {
     mat = new THREE.MeshPhongMaterial({
         color: Colors.yellow,
         opacity: 0.8,
-        shading: THREE.FlatShading,
+        flatShading: THREE.FlatShading,
     });
 
     this.coin = new THREE.Mesh(geom, mat);
@@ -403,6 +403,16 @@ let Coin = function () {
     this.mesh.add(this.coin);
 };
 
+function checkCollision(a, b) {
+    console.log('---------------');
+    console.log('COIN ==> ', a);
+    console.log('BEE ==> ', b);
+
+    if (a.z >= b.z - 5 && a.z <= b.z + 5) {
+        console.log('HIT HIT HIT HIT HIT HIT HIT HIT HIT HIT HIT HIT HIT HIT')
+    }
+}
+
 function updateBee() {
     let targetX = normalize(mousePos.x, -1, 1, -100, 100);
     let targetZ = normalize(mousePos.y, -1, 1, 100, -200);
@@ -418,11 +428,19 @@ function updateBee() {
         floor.mesh.rotation.x += 0.002 + targetZ / 100000;
         for (let i = 0; i < coins.length; i++) {
             coins[i].mesh.rotation.x += 0.001 + targetZ / 300000;
+            // checkCollision(coins[i].mesh.children[0].position, bee.mesh.position);
+            coins[i].mesh.children[0].rotation.y += .1;
+            coins[i].mesh.children[0].rotation.z += .1;
+            coins[i].mesh.children[0].rotation.x += .1;
         }
     } else {
         floor.mesh.rotation.x += 0.005 + -targetZ / 10000;
         for (let i = 0; i < coins.length; i++) {
             coins[i].mesh.rotation.x += 0.001 + -targetZ / 30000;
+            // checkCollision(coins[i].mesh.children[0].position, bee.mesh.position);
+            coins[i].mesh.children[0].rotation.y += .1;
+            coins[i].mesh.children[0].rotation.z += .1;
+            coins[i].mesh.children[0].rotation.x += .1;
         }
     }
 

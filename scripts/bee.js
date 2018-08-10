@@ -1,4 +1,4 @@
-let Colors = {
+const colors = {
     green: 0x2bca2b,
     black: 0x333359,
     white: 0xd8d0d1,
@@ -16,8 +16,6 @@ let mousePos = {
 let scene,
     fieldOfView,
     aspectRatio,
-    nearBee,
-    farBee,
     renderer,
     container;
 
@@ -46,18 +44,18 @@ function createScene() {
 
     scene = new THREE.Scene();
     aspectRatio = WIDTH / HEIGHT;
-    fieldOfView = 60;
-    nearBee = 1;
-    farBee = 10000;
+    fieldOfView = 55;
+    from = 1;
+    to = 10000;
 
     camera = new THREE.PerspectiveCamera(
         fieldOfView,
         aspectRatio,
-        nearBee,
-        farBee,
+        from,
+        to,
     );
 
-    scene.fog = new THREE.Fog(0x2e712e, 100, 980);
+    scene.fog = new THREE.Fog(colors.grey, 100, 1000);
 
     camera.position.x = 0;
     camera.position.z = 220;
@@ -98,7 +96,7 @@ function createLights() {
 }
 
 function createCoin() {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
         coins[i] = new Coin();
         scene.add(coins[i].mesh);
     }
@@ -113,7 +111,7 @@ function createBee() {
 }
 
 function createFloor() {
-    floor = new Floor();
+    floor = new Earth();
     floor.moveHills();
     scene.add(floor.mesh);
 }
@@ -171,7 +169,7 @@ let Bee = function () {
     //HEAD
     let geomHead = new THREE.SphereGeometry(55, 32, 32);
     let matHead = new THREE.MeshPhongMaterial({
-        color: Colors.black,
+        color: colors.black,
         flatShading: THREE.FlatShading,
     });
 
@@ -185,7 +183,7 @@ let Bee = function () {
     //BODY1
     let geomBody1 = new THREE.SphereGeometry(65, 32, 32);
     let matBody1 = new THREE.MeshPhongMaterial({
-        color: Colors.yellow,
+        color: colors.yellow,
         flatShading: THREE.FlatShading,
     });
 
@@ -198,7 +196,7 @@ let Bee = function () {
     //BODY2
     let geomBody2 = new THREE.SphereGeometry(70, 32, 32);
     let matBody2 = new THREE.MeshPhongMaterial({
-        color: Colors.black,
+        color: colors.black,
         flatShading: THREE.FlatShading,
     });
 
@@ -211,7 +209,7 @@ let Bee = function () {
     //BODYWING
     let geomBodyWing = new THREE.SphereGeometry(30, 32, 32);
     let matBodyWing = new THREE.MeshPhongMaterial({
-        color: Colors.black,
+        color: colors.black,
         flatShading: THREE.FlatShading,
     });
 
@@ -225,7 +223,7 @@ let Bee = function () {
     //BODY3
     let geomBody3 = new THREE.SphereGeometry(65, 32, 32);
     let matBody3 = new THREE.MeshPhongMaterial({
-        color: Colors.yellow,
+        color: colors.yellow,
         flatShading: THREE.FlatShading,
     });
 
@@ -239,7 +237,7 @@ let Bee = function () {
     //TAIL
     let geomTail = new THREE.SphereGeometry(45, 32, 32);
     let matTail = new THREE.MeshPhongMaterial({
-        color: Colors.black,
+        color: colors.black,
         flatShading: THREE.FlatShading,
     });
 
@@ -270,7 +268,7 @@ let Bee = function () {
     geomWing.faces.push(new THREE.Face3(4, 6, 7));
 
     let material = new THREE.MeshBasicMaterial({
-        color: Colors.white,
+        color: colors.white,
         transparent: true,
         opacity: 0.5,
         side: THREE.DoubleSide,
@@ -287,7 +285,7 @@ let Bee = function () {
     //STING
     let geomDard = new THREE.CylinderGeometry(20, 0, 50, 10);
     let matDard = new THREE.MeshPhongMaterial({
-        color: Colors.white,
+        color: colors.white,
         flatShading: THREE.FlatShading,
     });
 
@@ -303,7 +301,7 @@ let Bee = function () {
 // =============================
 // =========== FLOOR ===========
 // =============================
-let Floor = function () {
+let Earth = function () {
     let geom = new THREE.CylinderGeometry(500, 500, 2900, 33, 34);
     geom.mergeVertices();
     let l = geom.vertices.length;
@@ -323,7 +321,7 @@ let Floor = function () {
     }
 
     let mat = new THREE.MeshPhongMaterial({
-        color: 0x671f02,
+        color: 0x38661f,
         opacity: 0.6,
         flatShading: THREE.FlatShading,
     });
@@ -334,7 +332,7 @@ let Floor = function () {
     this.mesh.position.y -= 700;
 };
 
-Floor.prototype.moveHills = function () {
+Earth.prototype.moveHills = function () {
     let verts = this.mesh.geometry.vertices;
     let l = verts.length;
 
@@ -380,7 +378,7 @@ let Coin = function () {
 
     geom = new THREE.CylinderGeometry(this.side, this.side, 5, 32);
     mat = new THREE.MeshPhongMaterial({
-        color: Colors.yellow,
+        color: colors.yellow,
         opacity: 0.8,
         flatShading: THREE.FlatShading,
     });

@@ -1,11 +1,6 @@
-
-// Load application styles
 import 'styles/index.scss';
 import * as THREE from 'three';
 
-// ================================
-// START YOUR APP HERE
-// ================================
 const colors = {
     green: 0x2bca2b,
     black: 0x333359,

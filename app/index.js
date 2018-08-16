@@ -1,5 +1,6 @@
 import 'styles/index.scss';
 import * as THREE from 'three';
+import { Vector3 } from "three";
 
 const colors = {
     green: 0x2bca2b,
@@ -23,6 +24,8 @@ let bee, sea, floor;
 let HEIGHT, WIDTH;
 
 let coins = [];
+
+const target = new Vector3();
 
 let ambientLight, hemisphereLight, shadowLight;
 
@@ -99,7 +102,7 @@ function createCoin() {
 }
 
 function createBee() {
-    bee = new Index();
+    bee = new Bee();
     bee.mesh.scale.set(0.25, 0.25, 0.25);
     bee.mesh.position.y = 0;
     bee.mesh.position.z = 0;
@@ -159,7 +162,7 @@ function normalize(v, vmin, vmax, tmin, tmax) {
 // =============================
 // ============ BEE ============
 // =============================
-let Index = function () {
+let Bee = function () {
     this.mesh = new THREE.Object3D();
 
     // HEAD
@@ -396,13 +399,10 @@ let Coin = function () {
     this.mesh.add(this.coin);
 };
 
-function checkCollision(a, b) {
-    console.log('---------------');
-    console.log('COIN ==> ', a);
-    console.log('BEE ==> ', b);
-
-    if (a.z >= b.z - 5 && a.z <= b.z + 5) {
+function checkCollision(c, b) {
+    if ((c.z >= b.z - 80 && c.z <= b.z + 80) && (c.x >= b.x - 80 && c.x <= b.x + 80)) {
         console.log('HIT');
+        console.log(bee);
     }
 }
 
@@ -419,8 +419,8 @@ function updateBee() {
     if (targetZ > 0) {
         floor.mesh.rotation.x += 0.002 + targetZ / 100000;
         for (const coin of coins) {
+            checkCollision(coin.mesh.children[0].getWorldPosition(target), bee.mesh.position);
             coin.mesh.rotation.x += 0.001 + targetZ / 300000;
-            // checkCollision(coins[i].mesh.children[0].position, bee.mesh.position);
             coin.mesh.children[0].rotation.y += 0.1;
             coin.mesh.children[0].rotation.z += 0.1;
             coin.mesh.children[0].rotation.x += 0.1;
@@ -428,8 +428,8 @@ function updateBee() {
     } else {
         floor.mesh.rotation.x += 0.005 + -targetZ / 10000;
         for (const coin of coins) {
+            checkCollision(coin.mesh.children[0].getWorldPosition(target), bee.mesh.position);
             coin.mesh.rotation.x += 0.001 + -targetZ / 30000;
-            // checkCollision(coins[i].mesh.children[0].position, bee.mesh.position);
             coin.mesh.children[0].rotation.y += 0.1;
             coin.mesh.children[0].rotation.z += 0.1;
             coin.mesh.children[0].rotation.x += 0.1;

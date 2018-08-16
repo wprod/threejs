@@ -454,6 +454,7 @@ function updateBee() {
 
     bee.mesh.position.x += (targetX - bee.mesh.position.x / 2) * 0.1;
     bee.mesh.position.z += (targetZ - bee.mesh.position.z) * 0.1;
+    bee.mesh.rotation.x -= mousePos.y / 2;
 
     bee.mesh.rotation.x = (targetZ - bee.mesh.position.z) * 0.015;
     bee.mesh.rotation.y = (targetX - bee.mesh.position.x / 1.5) * -0.01;

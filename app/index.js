@@ -1,6 +1,6 @@
 import 'styles/index.scss';
 import * as THREE from 'three';
-import { Vector3 } from "three";
+import { Vector3 } from 'three';
 
 const colors = {
     green: 0x2bca2b,
@@ -399,10 +399,31 @@ let Coin = function () {
     this.mesh.add(this.coin);
 };
 
-function checkCollision(c, b) {
-    if ((c.z >= b.z - 80 && c.z <= b.z + 80) && (c.x >= b.x - 80 && c.x <= b.x + 80)) {
-        console.log('HIT');
-        console.log(bee);
+function checkCollision(coin, bee, distance) {
+    return (coin.z >= bee.z - distance && coin.z <= bee.z + distance)
+        && (coin.x >= bee.x - distance && coin.x <= bee.x + distance)
+        && (coin.y >= bee.y - distance && coin.y <= bee.y + distance);
+}
+
+function getRandomRgb() {
+    return {r: Math.random(), g: Math.random(), b: Math.random()};
+}
+
+function handleCoins(coins, bee, speed) {
+    for (const coin of coins) {
+        if (checkCollision(
+            coin.mesh.children[0].getWorldPosition(target),
+            bee.mesh.position,
+            60
+        )) {
+            coin.mesh.position.y -= 2000;
+            bee.dard.material.color = getRandomRgb();
+        }
+
+        coin.mesh.children[0].rotation.y += 0.1;
+        coin.mesh.children[0].rotation.z += 0.1;
+        coin.mesh.children[0].rotation.x += 0.1;
+        coin.mesh.rotation.x += speed;
     }
 }
 
@@ -418,22 +439,12 @@ function updateBee() {
 
     if (targetZ > 0) {
         floor.mesh.rotation.x += 0.002 + targetZ / 100000;
-        for (const coin of coins) {
-            checkCollision(coin.mesh.children[0].getWorldPosition(target), bee.mesh.position);
-            coin.mesh.rotation.x += 0.001 + targetZ / 300000;
-            coin.mesh.children[0].rotation.y += 0.1;
-            coin.mesh.children[0].rotation.z += 0.1;
-            coin.mesh.children[0].rotation.x += 0.1;
-        }
+        const speed = 0.001 + targetZ / 100000; // Move slower
+        handleCoins(coins, bee, speed);
     } else {
         floor.mesh.rotation.x += 0.005 + -targetZ / 10000;
-        for (const coin of coins) {
-            checkCollision(coin.mesh.children[0].getWorldPosition(target), bee.mesh.position);
-            coin.mesh.rotation.x += 0.001 + -targetZ / 30000;
-            coin.mesh.children[0].rotation.y += 0.1;
-            coin.mesh.children[0].rotation.z += 0.1;
-            coin.mesh.children[0].rotation.x += 0.1;
-        }
+        const speed = 0.001 + -targetZ / 10000; // Move faster
+        handleCoins(coins, bee, speed);
     }
 
     if (targetZ > -40) {

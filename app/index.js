@@ -34,19 +34,15 @@ let mousePos = {
     x: 0,
     y: 0,
 };
-
 let scene, fieldOfView, aspectRatio, renderer, from, to, camera, container;
-
 let bee, sea, earth;
-
 let HEIGHT, WIDTH;
-
 let coins = [];
-
+let bombs = [];
+let score = 0;
+let dead = false;
 let speedFactor = 0;
-
 const target = new Vector3();
-
 let ambientLight, hemisphereLight, shadowLight;
 
 window.addEventListener('load', init, false);
@@ -56,6 +52,7 @@ function init() {
     createLights();
     createBee();
     createCoin();
+    createBomb();
     createEarth();
     createSea();
     document.addEventListener('mousemove', handleMouseMove, false);
@@ -117,8 +114,14 @@ function createLights() {
 function createCoin() {
     for (let i = 0; i < 50; i++) {
         coins[i] = new Coin();
-        coins[i].name = i;
         scene.add(coins[i].mesh);
+    }
+}
+
+function createBomb() {
+    for (let i = 0; i < 20; i++) {
+        bombs[i] = new Bomb();
+        scene.add(bombs[i].mesh);
     }
 }
 
@@ -420,6 +423,38 @@ let Coin = function () {
     this.mesh.add(this.coin);
 };
 
+let Bomb = function () {
+    this.mesh = new Object3D();
+    this.radius = 1200;
+    this.side = 20;
+    this.s = (Math.PI * getRandomInt(0, 360)) / 180;
+    this.t = (Math.PI * getRandomInt(0, 360)) / 180;
+
+    const geom = new SphereGeometry(this.side, this.side, 5, 32);
+    const mat = new MeshPhongMaterial({
+        color: colors.black,
+        opacity: 0.8,
+        flatShading: FlatShading,
+    });
+
+    this.bomb = new Mesh(geom, mat);
+    this.bomb.receiveShadow = true;
+    this.bomb.castShadow = true;
+
+    const xAxis = this.radius * Math.cos(this.s) * Math.sin(this.t);
+    const yAxis = this.radius * Math.sin(this.s) * Math.sin(this.t);
+    const zAxis = this.radius * Math.cos(this.t);
+
+    this.bomb.position.x = xAxis;
+    this.bomb.position.y = yAxis;
+    this.bomb.position.z = zAxis;
+    this.bomb.rotation.z = zAxis;
+    this.bomb.rotation.x = zAxis;
+    this.bomb.rotation.y = zAxis;
+    this.mesh.position.y -= 1200;
+    this.mesh.add(this.bomb);
+};
+
 function checkCollision(coin, bee, distance) {
     return (coin.z >= bee.z - distance && coin.z <= bee.z + distance)
         && (coin.x >= bee.x - distance && coin.x <= bee.x + distance)
@@ -430,16 +465,18 @@ function getRandomRgb() {
     return {r: Math.random(), g: Math.random(), b: Math.random()};
 }
 
-function handleCollision(coins, bee, speed) {
+function handleCollision(speed) {
+    // COINS
     for (let [index, coin] of coins.entries()) {
         if (checkCollision(
             coin.mesh.children[0].getWorldPosition(target),
             bee.mesh.position,
             60
         )) {
-            console.log(index);
-            coin.mesh.position.y -= 1;
+            scene.remove(coin.mesh);
             coins.splice(index, 1);
+            score += 1;
+            document.getElementById('js-score').innerHTML = score;
             bee.sting.material.color = getRandomRgb();
         }
 
@@ -447,6 +484,22 @@ function handleCollision(coins, bee, speed) {
         coin.mesh.children[0].rotation.z += 0.1;
         coin.mesh.children[0].rotation.x += 0.1;
         coin.mesh.rotation.x += speed;
+    }
+
+    //BOMBS
+    for (let bomb of bombs) {
+        if (checkCollision(
+            bomb.mesh.children[0].getWorldPosition(target),
+            bee.mesh.position,
+            60
+        )) {
+            dead = true;
+        }
+
+        bomb.mesh.children[0].rotation.y += 0.1;
+        bomb.mesh.children[0].rotation.z += 0.1;
+        bomb.mesh.children[0].rotation.x += 0.1;
+        bomb.mesh.rotation.x += speed + .005;
     }
 }
 
@@ -466,11 +519,11 @@ function updateBee() {
     if (targetZ > 0) {
         earth.mesh.rotation.x += 0.002 + targetZ / 100000 + speedFactor;
         const speed = 0.001 + targetZ / 100000 + speedFactor; // Move slower
-        handleCollision(coins, bee, speed);
+        handleCollision(speed);
     } else {
         earth.mesh.rotation.x += 0.005 + -targetZ / 10000 + speedFactor;
         const speed = 0.001 + -targetZ / 10000 + speedFactor; // Move faster
-        handleCollision(coins, bee, speed);
+        handleCollision(speed);
     }
 
     if (targetZ > -40) {
@@ -501,5 +554,6 @@ function updateBee() {
 function loop() {
     renderer.render(scene, camera);
     updateBee();
-    requestAnimationFrame(loop);
+
+    dead ? console.log("DEAD") : requestAnimationFrame(loop);
 }

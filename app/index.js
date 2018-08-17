@@ -37,7 +37,7 @@ let mousePos = {
 
 let scene, fieldOfView, aspectRatio, renderer, from, to, camera, container;
 
-let bee, sea, floor;
+let bee, sea, earth;
 
 let HEIGHT, WIDTH;
 
@@ -56,7 +56,7 @@ function init() {
     createLights();
     createBee();
     createCoin();
-    createFloor();
+    createEarth();
     createSea();
     document.addEventListener('mousemove', handleMouseMove, false);
     loop();
@@ -117,6 +117,7 @@ function createLights() {
 function createCoin() {
     for (let i = 0; i < 50; i++) {
         coins[i] = new Coin();
+        coins[i].name = i;
         scene.add(coins[i].mesh);
     }
 }
@@ -129,10 +130,10 @@ function createBee() {
     scene.add(bee.mesh);
 }
 
-function createFloor() {
-    floor = new Earth();
-    floor.moveHills();
-    scene.add(floor.mesh);
+function createEarth() {
+    earth = new Earth();
+    earth.moveHills();
+    scene.add(earth.mesh);
 }
 
 function createSea() {
@@ -301,23 +302,23 @@ let Bee = function () {
     this.mesh.add(this.wings);
 
     // STING
-    const geomDard = new CylinderGeometry(20, 0, 50, 10);
-    const matDard = new MeshPhongMaterial({
+    const geomSting = new CylinderGeometry(20, 0, 50, 10);
+    const matSting = new MeshPhongMaterial({
         color: colors.white,
         flatShading: FlatShading,
     });
 
-    this.dard = new Mesh(geomDard, matDard);
-    this.dard.castShadow = true;
-    this.dard.receiveShadow = true;
-    this.dard.position.z += 50;
-    this.dard.position.y -= 10;
-    this.dard.rotation.x = Math.PI * 1.6;
-    this.mesh.add(this.dard);
+    this.sting = new Mesh(geomSting, matSting);
+    this.sting.castShadow = true;
+    this.sting.receiveShadow = true;
+    this.sting.position.z += 50;
+    this.sting.position.y -= 10;
+    this.sting.rotation.x = Math.PI * 1.6;
+    this.mesh.add(this.sting);
 };
 
 // =============================
-// =========== FLOOR ===========
+// =========== EARTH ===========
 // =============================
 let Earth = function () {
     const geom = new CylinderGeometry(500, 500, 2900, 33, 34);
@@ -365,7 +366,7 @@ Earth.prototype.moveHills = function () {
 
     this.mesh.geometry.verticesNeedUpdate = true;
 
-    floor.mesh.rotation.z += 0.1;
+    earth.mesh.rotation.z += 0.1;
 };
 
 // =============================
@@ -429,15 +430,17 @@ function getRandomRgb() {
     return {r: Math.random(), g: Math.random(), b: Math.random()};
 }
 
-function handleCoins(coins, bee, speed) {
-    for (const coin of coins) {
+function handleCollision(coins, bee, speed) {
+    for (let [index, coin] of coins.entries()) {
         if (checkCollision(
             coin.mesh.children[0].getWorldPosition(target),
             bee.mesh.position,
             60
         )) {
-            coin.mesh.position.y -= 2000;
-            bee.dard.material.color = getRandomRgb();
+            console.log(index);
+            coin.mesh.position.y -= 1;
+            coins.splice(index, 1);
+            bee.sting.material.color = getRandomRgb();
         }
 
         coin.mesh.children[0].rotation.y += 0.1;
@@ -449,6 +452,7 @@ function handleCoins(coins, bee, speed) {
 
 function updateBee() {
     speedFactor += .00001;
+
     const targetX = normalize(mousePos.x, -1, 1, -100, 100);
     let targetZ = normalize(mousePos.y, -1, 1, 100, -200);
 
@@ -460,13 +464,13 @@ function updateBee() {
     bee.mesh.rotation.y = (targetX - bee.mesh.position.x / 1.5) * -0.01;
 
     if (targetZ > 0) {
-        floor.mesh.rotation.x += 0.002 + targetZ / 100000 + speedFactor;
+        earth.mesh.rotation.x += 0.002 + targetZ / 100000 + speedFactor;
         const speed = 0.001 + targetZ / 100000 + speedFactor; // Move slower
-        handleCoins(coins, bee, speed);
+        handleCollision(coins, bee, speed);
     } else {
-        floor.mesh.rotation.x += 0.005 + -targetZ / 10000 + speedFactor;
+        earth.mesh.rotation.x += 0.005 + -targetZ / 10000 + speedFactor;
         const speed = 0.001 + -targetZ / 10000 + speedFactor; // Move faster
-        handleCoins(coins, bee, speed);
+        handleCollision(coins, bee, speed);
     }
 
     if (targetZ > -40) {

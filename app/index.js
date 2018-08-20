@@ -112,14 +112,16 @@ function createLights() {
 }
 
 function createCoin() {
-    for (let i = 0; i < 50; i++) {
-        coins[i] = new Coin();
+    let i = 0;
+    let tot = 100;
+    for (i; i < tot; i++) {
+        coins[i] = new Coin(i, tot);
         scene.add(coins[i].mesh);
     }
 }
 
 function createBomb() {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 10; i++) {
         bombs[i] = new Bomb();
         scene.add(bombs[i].mesh);
     }
@@ -165,6 +167,10 @@ function handleMouseMove(event) {
         x: tx,
         y: ty,
     };
+}
+
+function getRandomRgb() {
+    return {r: Math.random(), g: Math.random(), b: Math.random()};
 }
 
 function getRandomInt(min, max) {
@@ -391,12 +397,15 @@ let Sea = function () {
     this.mesh.position.y -= 700;
 };
 
-let Coin = function () {
+// =============================
+// ============ COIN ===========
+// =============================
+let Coin = function (i, tot) {
     this.mesh = new Object3D();
     this.radius = 1200;
     this.side = 20;
-    this.s = (Math.PI * getRandomInt(0, 360)) / 180;
-    this.t = (Math.PI * getRandomInt(0, 360)) / 180;
+    this.s = (Math.PI * i / tot * 360) / 100;
+    this.t = (Math.PI * i / tot * 360) / 100;
 
     const geom = new CylinderGeometry(this.side, this.side, 5, 32);
     const mat = new MeshPhongMaterial({
@@ -423,6 +432,9 @@ let Coin = function () {
     this.mesh.add(this.coin);
 };
 
+// =============================
+// ============ BOMB ===========
+// =============================
 let Bomb = function () {
     this.mesh = new Object3D();
     this.radius = 1200;
@@ -455,14 +467,13 @@ let Bomb = function () {
     this.mesh.add(this.bomb);
 };
 
+// =============================
+// ====== COLLISION LOGIC ======
+// =============================
 function checkCollision(coin, bee, distance) {
     return (coin.z >= bee.z - distance && coin.z <= bee.z + distance)
         && (coin.x >= bee.x - distance && coin.x <= bee.x + distance)
         && (coin.y >= bee.y - distance && coin.y <= bee.y + distance);
-}
-
-function getRandomRgb() {
-    return {r: Math.random(), g: Math.random(), b: Math.random()};
 }
 
 function handleCollision(speed) {
@@ -503,19 +514,28 @@ function handleCollision(speed) {
     }
 }
 
+// =============================
+// ======= UPDATE LOGIC ========
+// =============================
 function updateBee() {
-    speedFactor += .00001;
+    speedFactor += .000002;
+    // if (coins.length < 50) {
+    //     let nc = new Coin(1, 100)
+    //     coins.push(nc);
+    //     scene.add(coins[i].mesh);
+    // }
 
     const targetX = normalize(mousePos.x, -1, 1, -100, 100);
     let targetZ = normalize(mousePos.y, -1, 1, 100, -200);
 
-    bee.mesh.position.x += (targetX - bee.mesh.position.x / 2) * 0.1;
-    bee.mesh.position.z += (targetZ - bee.mesh.position.z) * 0.1;
+    bee.mesh.position.x += (targetX - bee.mesh.position.x / 2) * 0.2;
+    bee.mesh.position.z += (targetZ - bee.mesh.position.z) * 0.2;
     bee.mesh.rotation.x -= mousePos.y / 2;
 
     bee.mesh.rotation.x = (targetZ - bee.mesh.position.z) * 0.015;
     bee.mesh.rotation.y = (targetX - bee.mesh.position.x / 1.5) * -0.01;
 
+    // Check if bee is forward or backward
     if (targetZ > 0) {
         earth.mesh.rotation.x += 0.002 + targetZ / 100000 + speedFactor;
         const speed = 0.001 + targetZ / 100000 + speedFactor; // Move slower
@@ -526,6 +546,7 @@ function updateBee() {
         handleCollision(speed);
     }
 
+    // Min wing speed
     if (targetZ > -40) {
         targetZ = -40;
     } else if (targetZ < -150) {
@@ -547,8 +568,6 @@ function updateBee() {
     bee.wings.geometry.vertices[6].y -= normalisedSpeed;
 
     bee.wings.geometry.verticesNeedUpdate = true;
-
-    bee.mesh.rotation.z = 0;
 }
 
 function loop() {

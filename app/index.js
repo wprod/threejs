@@ -40,6 +40,7 @@ let HEIGHT, WIDTH;
 let coins = [];
 let bombs = [];
 let score = 0;
+let level = 0;
 let dead = false;
 let speedFactor = 0;
 const target = new Vector3();
@@ -52,7 +53,7 @@ function init() {
     createLights();
     createBee();
     createCoin();
-    createBomb();
+    // createBomb();
     createEarth();
     createSea();
     document.addEventListener('mousemove', handleMouseMove, false);
@@ -111,17 +112,16 @@ function createLights() {
     scene.add(shadowLight);
 }
 
-function createCoin() {
+function createCoin(nb = 200) {
     let i = 0;
-    let tot = 100;
-    for (i; i < tot; i++) {
-        coins[i] = new Coin(i, tot);
+    for (i; i < nb; i++) {
+        coins[i] = new Coin(i);
         scene.add(coins[i].mesh);
     }
 }
 
-function createBomb() {
-    for (let i = 0; i < 10; i++) {
+function createBomb(nb) {
+    for (let i = 0; i < nb; i++) {
         bombs[i] = new Bomb();
         scene.add(bombs[i].mesh);
     }
@@ -400,12 +400,12 @@ let Sea = function () {
 // =============================
 // ============ COIN ===========
 // =============================
-let Coin = function (i, tot) {
+let Coin = function (i) {
     this.mesh = new Object3D();
     this.radius = 1200;
-    this.side = 20;
-    this.s = (Math.PI * i / tot * 360) / 100;
-    this.t = (Math.PI * i / tot * 360) / 100;
+    this.side = 15;
+    this.s = (Math.PI * i * i) / 180;
+    this.t = (Math.PI * i * 2) / 180;
 
     const geom = new CylinderGeometry(this.side, this.side, 5, 32);
     const mat = new MeshPhongMaterial({
@@ -486,9 +486,8 @@ function handleCollision(speed) {
         )) {
             scene.remove(coin.mesh);
             coins.splice(index, 1);
-            score += 1;
+            updateLevel();
             document.getElementById('js-score').innerHTML = score;
-            bee.sting.material.color = getRandomRgb();
         }
 
         coin.mesh.children[0].rotation.y += 0.1;
@@ -517,14 +516,31 @@ function handleCollision(speed) {
 // =============================
 // ======= UPDATE LOGIC ========
 // =============================
-function updateBee() {
-    speedFactor += .000002;
-    // if (coins.length < 50) {
-    //     let nc = new Coin(1, 100)
-    //     coins.push(nc);
-    //     scene.add(coins[i].mesh);
-    // }
+function updateLevel() {
+    score += 1;
 
+    if (score === 30) {
+        console.log('LEVEL UP');
+        level = 1;
+        speedFactor = .002;
+        earth.mesh.material.color = {r: 0.34296287321416097, g: 0.47372536190925696, b: 0.7874397845987531};
+    } else if (score === 40) {
+        level = 2;
+        speedFactor = .004;
+        earth.mesh.material.color = {r: 0.14125641049773652, g: 0.0862999136911784, b: 0.2521665747347359};
+        createBomb(10);
+    } else if (score === 50) {
+        level = 3;
+        speedFactor = .006;
+        earth.mesh.material.color = {r: 0.7950386478486318, g: 0.4352420987190768, b: 0.14264124412486234};
+    } else if (score === 60) {
+        level = 4;
+        speedFactor = .008;
+        earth.mesh.material.color = {r: 0.8807532351956822, g: 0.15956408835556335, b: 0.632655339784824};
+    }
+}
+
+function updateBee() {
     const targetX = normalize(mousePos.x, -1, 1, -100, 100);
     let targetZ = normalize(mousePos.y, -1, 1, 100, -200);
 
@@ -573,6 +589,5 @@ function updateBee() {
 function loop() {
     renderer.render(scene, camera);
     updateBee();
-
     dead ? console.log("DEAD") : requestAnimationFrame(loop);
 }

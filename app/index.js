@@ -19,7 +19,9 @@ import {
     Vector3,
     WebGLRenderer
 } from 'three';
-import * as hs from 'hammerjs';
+import * as Hammer from 'hammerjs';
+
+window.Hammer = Hammer.default;
 
 const colors = {
     green: 0x2bca2b,
@@ -62,8 +64,8 @@ function init() {
 
 // Handle touch/mobile
 const myElement = document.getElementById('world');
-const mc = new Hammer(myElement);
-mc.get('pan').set({direction: Hammer.DIRECTION_ALL});
+const mc = new window.Hammer(myElement);
+mc.get('pan').set({direction: window.Hammer.DIRECTION_ALL});
 mc.on("panleft panright panup pandown tap press", function (ev) {
     const tx = -1 + (ev.center.x / WIDTH) * 2;
     const ty = 1 - (ev.center.y / HEIGHT) * 2;
@@ -126,10 +128,10 @@ function createLights() {
     scene.add(shadowLight);
 }
 
-function createCoin(nb = 200) {
+function createCoin(nb = 100, patternFactor = 2) {
     let i = 0;
     for (i; i < nb; i++) {
-        coins[i] = new Coin(i);
+        coins[i] = new Coin(i, patternFactor);
         scene.add(coins[i].mesh);
     }
 }
@@ -410,12 +412,12 @@ let Sea = function () {
 // =============================
 // ============ COIN ===========
 // =============================
-let Coin = function (i) {
+let Coin = function (i, patternFactor = 2) {
     this.mesh = new Object3D();
     this.radius = 1200;
     this.side = 15;
-    this.s = (Math.PI * i * i) / 180;
-    this.t = (Math.PI * i * 2) / 180;
+    this.s = (Math.PI * i) / patternFactor;
+    this.t = (Math.PI * i) / 180;
 
     const geom = new CylinderGeometry(this.side, this.side, 5, 32);
     const mat = new MeshPhongMaterial({
@@ -496,14 +498,14 @@ function handleCollision(speed) {
         )) {
             scene.remove(coin.mesh);
             coins.splice(index, 1);
-            updateLevel();
             document.getElementById('js-score').innerHTML = score;
+            updateLevel();
+        } else {
+            coin.mesh.children[0].rotation.y += 0.1;
+            coin.mesh.children[0].rotation.z += 0.1;
+            coin.mesh.children[0].rotation.x += 0.1;
+            coin.mesh.rotation.x += speed;
         }
-
-        coin.mesh.children[0].rotation.y += 0.1;
-        coin.mesh.children[0].rotation.z += 0.1;
-        coin.mesh.children[0].rotation.x += 0.1;
-        coin.mesh.rotation.x += speed;
     }
 
     //BOMBS
@@ -517,8 +519,6 @@ function handleCollision(speed) {
         }
 
         bomb.mesh.children[0].rotation.y += 0.1;
-        bomb.mesh.children[0].rotation.z += 0.1;
-        bomb.mesh.children[0].rotation.x += 0.1;
         bomb.mesh.rotation.x += speed + .005;
     }
 }
@@ -526,27 +526,43 @@ function handleCollision(speed) {
 // =============================
 // ======= UPDATE LOGIC ========
 // =============================
+function cleanAndAdd(nb, patternFactor) {
+    for (let coin of coins) {
+        scene.remove(coin.mesh);
+    }
+    createCoin(nb, patternFactor);
+}
+
 function updateLevel() {
     score += 1;
 
-    if (score === 30) {
+    if (score === 52) {
         console.log('LEVEL UP');
         level = 1;
         speedFactor = .002;
         earth.mesh.material.color = {r: 0.34296287321416097, g: 0.47372536190925696, b: 0.7874397845987531};
-    } else if (score === 40) {
+        cleanAndAdd(100, 5);
+    } else if (score === 65) {
         level = 2;
         speedFactor = .004;
         earth.mesh.material.color = {r: 0.14125641049773652, g: 0.0862999136911784, b: 0.2521665747347359};
         createBomb(10);
-    } else if (score === 50) {
+        cleanAndAdd(220, 10);
+    } else if (score === 100) {
         level = 3;
         speedFactor = .006;
         earth.mesh.material.color = {r: 0.7950386478486318, g: 0.4352420987190768, b: 0.14264124412486234};
-    } else if (score === 60) {
+        cleanAndAdd(200, 10);
+    } else if (score === 150) {
         level = 4;
         speedFactor = .008;
         earth.mesh.material.color = {r: 0.8807532351956822, g: 0.15956408835556335, b: 0.632655339784824};
+        cleanAndAdd(220, 10);
+    } else if (score === 180) {
+        level = 5;
+        speedFactor = .01;
+        earth.mesh.material.color = {r: 0.8807532351956822, g: 0.15956408835556335, b: 0.632655339784824};
+        cleanAndAdd(100, 20);
     }
 }
 
@@ -560,6 +576,7 @@ function updateBee() {
 
     bee.mesh.rotation.x = (targetZ - bee.mesh.position.z) * 0.015;
     bee.mesh.rotation.y = (targetX - bee.mesh.position.x / 1.5) * -0.01;
+    bee.mesh.rotation.z = (targetX - bee.mesh.position.x / 1.5) * -0.01;
 
     // Check if bee is forward or backward
     if (targetZ > 0) {

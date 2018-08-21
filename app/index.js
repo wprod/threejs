@@ -19,6 +19,7 @@ import {
     Vector3,
     WebGLRenderer
 } from 'three';
+import * as hs from 'hammerjs';
 
 const colors = {
     green: 0x2bca2b,
@@ -53,12 +54,25 @@ function init() {
     createLights();
     createBee();
     createCoin();
-    // createBomb();
     createEarth();
     createSea();
     document.addEventListener('mousemove', handleMouseMove, false);
     loop();
 }
+
+// Handle touch/mobile
+const myElement = document.getElementById('world');
+const mc = new Hammer(myElement);
+mc.get('pan').set({direction: Hammer.DIRECTION_ALL});
+mc.on("panleft panright panup pandown tap press", function (ev) {
+    const tx = -1 + (ev.center.x / WIDTH) * 2;
+    const ty = 1 - (ev.center.y / HEIGHT) * 2;
+
+    mousePos = {
+        x: tx,
+        y: ty,
+    };
+});
 
 function createScene() {
     HEIGHT = window.innerHeight;
@@ -167,10 +181,6 @@ function handleMouseMove(event) {
         x: tx,
         y: ty,
     };
-}
-
-function getRandomRgb() {
-    return {r: Math.random(), g: Math.random(), b: Math.random()};
 }
 
 function getRandomInt(min, max) {

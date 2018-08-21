@@ -540,28 +540,23 @@ function updateLevel() {
         console.log('LEVEL UP');
         level = 1;
         speedFactor = .002;
-        earth.mesh.material.color = {r: 0.34296287321416097, g: 0.47372536190925696, b: 0.7874397845987531};
         cleanAndAdd(100, 5);
     } else if (score === 65) {
         level = 2;
         speedFactor = .004;
-        earth.mesh.material.color = {r: 0.14125641049773652, g: 0.0862999136911784, b: 0.2521665747347359};
         createBomb(10);
         cleanAndAdd(220, 10);
     } else if (score === 100) {
         level = 3;
         speedFactor = .006;
-        earth.mesh.material.color = {r: 0.7950386478486318, g: 0.4352420987190768, b: 0.14264124412486234};
         cleanAndAdd(200, 10);
     } else if (score === 150) {
         level = 4;
         speedFactor = .008;
-        earth.mesh.material.color = {r: 0.8807532351956822, g: 0.15956408835556335, b: 0.632655339784824};
         cleanAndAdd(220, 10);
     } else if (score === 180) {
         level = 5;
         speedFactor = .01;
-        earth.mesh.material.color = {r: 0.8807532351956822, g: 0.15956408835556335, b: 0.632655339784824};
         cleanAndAdd(100, 20);
     }
 }

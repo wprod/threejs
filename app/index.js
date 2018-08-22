@@ -498,7 +498,6 @@ function handleCollision(speed) {
         )) {
             scene.remove(coin.mesh);
             coins.splice(index, 1);
-            document.getElementById('js-score').innerHTML = score;
             updateLevel();
         } else {
             coin.mesh.children[0].rotation.y += 0.1;
@@ -535,29 +534,39 @@ function cleanAndAdd(nb, patternFactor) {
 
 function updateLevel() {
     score += 1;
+    document.getElementById('js-score').innerHTML = score;
 
     if (score === 52) {
         console.log('LEVEL UP');
         level = 1;
         speedFactor = .002;
         cleanAndAdd(100, 5);
+        document.getElementById("world").className = 'yellow';
     } else if (score === 65) {
+        console.log('LEVEL UP');
         level = 2;
         speedFactor = .004;
         createBomb(10);
         cleanAndAdd(220, 10);
+        document.getElementById("world").className = 'red';
     } else if (score === 100) {
+        console.log('LEVEL UP');
         level = 3;
         speedFactor = .006;
         cleanAndAdd(200, 10);
+        document.getElementById("world").className = 'black';
     } else if (score === 150) {
+        console.log('LEVEL UP');
         level = 4;
         speedFactor = .008;
         cleanAndAdd(220, 10);
+        document.getElementById("world").className = 'red';
     } else if (score === 180) {
+        console.log('LEVEL UP');
         level = 5;
         speedFactor = .01;
         cleanAndAdd(100, 20);
+        document.getElementById("world").className = 'yellow';
     }
 }
 

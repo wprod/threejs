@@ -430,7 +430,7 @@ let Coin = function (i, patternFactor = 2) {
     this.coin.receiveShadow = true;
     this.coin.castShadow = true;
 
-    const xAxis = this.radius * Math.cos(this.s) * Math.sin(this.t);
+    const xAxis = this.radius * Math.cos(this.s) * Math.sin(this.t)/1.5;
     const yAxis = this.radius * Math.sin(this.s) * Math.sin(this.t);
     const zAxis = this.radius * Math.cos(this.t);
 
@@ -440,7 +440,7 @@ let Coin = function (i, patternFactor = 2) {
     this.coin.rotation.z = zAxis;
     this.coin.rotation.x = zAxis;
     this.coin.rotation.y = zAxis;
-    this.mesh.position.y -= 1200;
+    this.mesh.position.y -= 1195;
     this.mesh.add(this.coin);
 };
 
@@ -542,26 +542,26 @@ function updateLevel() {
         speedFactor = .002;
         cleanAndAdd(100, 5);
         document.getElementById("world").className = 'yellow';
-    } else if (score === 65) {
+    } else if (score === 70) {
         console.log('LEVEL UP');
         level = 2;
         speedFactor = .004;
         createBomb(10);
-        cleanAndAdd(220, 10);
+        cleanAndAdd(100, 10);
         document.getElementById("world").className = 'red';
     } else if (score === 100) {
         console.log('LEVEL UP');
         level = 3;
         speedFactor = .006;
-        cleanAndAdd(200, 10);
+        cleanAndAdd(100, 10);
         document.getElementById("world").className = 'black';
-    } else if (score === 150) {
+    } else if (score === 130) {
         console.log('LEVEL UP');
         level = 4;
         speedFactor = .008;
-        cleanAndAdd(220, 10);
+        cleanAndAdd(100, 10);
         document.getElementById("world").className = 'red';
-    } else if (score === 180) {
+    } else if (score === 160) {
         console.log('LEVEL UP');
         level = 5;
         speedFactor = .01;

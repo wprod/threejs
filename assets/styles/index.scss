@@ -1,5 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Kanit:800|Mr+Dafoe');
+
+$c-base: #222;
+$bg-color: #53e3a6;
+$bg-img: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
+$enable-fontSmoothing: true;
+$b-fontSize: 1.6rem;
+$b-fontFamily: Helvetica, Arial, sans-serif;
+$b-fontWeight: normal;
+$b-lineHeight: 1.5;
+$Title-color: saturate(lighten(#51c1a4, 6), 8);
+$Title-sub-color: #fff;
+
 html {
   box-sizing: border-box;
+  color: $c-base;
+  font-size: $b-fontSize;
+  font-family: $b-fontFamily;
+  font-weight: $b-fontWeight;
+  line-height: $b-lineHeight;
+  @if ($enable-fontSmoothing) {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 *, *:before, *:after {
@@ -33,7 +55,7 @@ html {
   background-repeat: repeat-y;
   background-size: 100% 1000%;
   background-position: 0 0;
-  transition: background 6000ms linear;
+  transition: background 6000ms ease-in-out;
 
   &.yellow {
     background-position: 0 20%;
@@ -54,21 +76,59 @@ html {
 
 .txt {
   position: absolute;
-  color: red;
-  top: 1rem;
+  color: #a96fa0;
   font-family: sans-serif;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
-}
+  height: 100%;
 
-h1 {
-  border: 1px Solid red;
-  padding: .3rem .5rem;
-  text-transform: uppercase;
-  font-size: 1.5rem;
-  margin-top: .4rem;
-}
+  .header {
+    text-align: center;
+  }
 
+  .header-sub {
+    opacity: 0.4;
+  }
+
+  .title, h1 {
+    color: $Title-color;
+    font-family: 'Kanit', Helvetica, Arial, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 0.7;
+    text-transform: uppercase;
+    position: relative;
+    margin: 0.2em;
+    font-size: 2.5rem;
+    text-shadow: 0.02em 0.02em 0.02em rgba(black, 0.08);
+    filter: drop-shadow(0.045em 0.045em 0.04em rgba(black, 0.21));
+  }
+
+  .title-sub {
+    color: $Title-sub-color;
+    font: 200 0.45em/1 "Mr Dafoe", serif;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    text-shadow: 0.02em 0.02em 0.02em rgba(black, 0.3);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 1rem;
+    transform: translate(-50%, -50%) rotate(-5deg);
+  }
+
+  .subhead {
+    color: inherit;
+    font-weight: bold;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-size: .3rem;
+  }
+
+  h1 {
+    font-size: 1rem;
+  }
+}

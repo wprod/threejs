@@ -19,9 +19,7 @@ import {
     Vector3,
     WebGLRenderer
 } from 'three';
-import * as Hammer from 'hammerjs';
-
-window.Hammer = Hammer.default;
+import 'hammerjs';
 
 const colors = {
     green: 0x2bca2b,
@@ -63,10 +61,10 @@ function init() {
 }
 
 // Handle touch/mobile
-const myElement = document.getElementById('world');
-const mc = new window.Hammer(myElement);
-mc.get('pan').set({direction: window.Hammer.DIRECTION_ALL});
-mc.on("panleft panright panup pandown tap press", function (ev) {
+const myElement = document.getElementById('js-touch');
+const mc = new Hammer(myElement);
+mc.get('pan').set({direction: Hammer.DIRECTION_ALL});
+mc.on("panleft panright panup pandown tap press", (ev) => {
     const tx = -1 + (ev.center.x / WIDTH) * 2;
     const ty = 1 - (ev.center.y / HEIGHT) * 2;
 
@@ -574,12 +572,12 @@ function updateBee() {
     const targetX = normalize(mousePos.x, -1, 1, -100, 100);
     let targetZ = normalize(mousePos.y, -1, 1, 100, -200);
 
-    bee.mesh.position.x += (targetX - bee.mesh.position.x / 2) * 0.2;
+    bee.mesh.position.x += (targetX * 1.2  - bee.mesh.position.x / 2) * 0.2;
     bee.mesh.position.z += (targetZ - bee.mesh.position.z) * 0.2;
     bee.mesh.rotation.x -= mousePos.y / 2;
 
     bee.mesh.rotation.x = (targetZ - bee.mesh.position.z) * 0.015;
-    bee.mesh.rotation.y = (targetX - bee.mesh.position.x / 1.5) * -0.01;
+    bee.mesh.rotation.y = (targetX - bee.mesh.position.x / 1.5) * -0.001;
     bee.mesh.rotation.z = (targetX - bee.mesh.position.x / 1.5) * -0.01;
 
     // Check if bee is forward or backward
